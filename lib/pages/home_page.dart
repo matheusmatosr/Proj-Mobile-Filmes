@@ -19,19 +19,36 @@ class HomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'CineUCL+',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 30),
+                  RichText(
+                    text: const TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Cine',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: 'UCL+',
+                          style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/login');
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      minimumSize: Size(200, 50),
+                    ),
                     child: const Text('Entrar'),
                   ),
                   const SizedBox(height: 10),
@@ -39,6 +56,10 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushNamed(context, '/register');
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      minimumSize: Size(200, 50),
+                    ),
                     child: const Text('Cadastrar'),
                   ),
                 ],

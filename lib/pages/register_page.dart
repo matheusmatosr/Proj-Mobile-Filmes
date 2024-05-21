@@ -1,29 +1,47 @@
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  final Function(String) onRegister;
+
+  const RegisterPage({Key? key, required this.onRegister}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String email = '';
+    String username = '';
+    String password = '';
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: RichText(
-          text: const TextSpan(
-            children: [
-              TextSpan(
-                text: 'Cine',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 30),
+            RichText(
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Cine',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: 'UCL+',
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              TextSpan(
-                text: 'UCL+',
-                style: TextStyle(color: Colors.orange, fontSize: 24),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,6 +57,9 @@ class RegisterPage extends StatelessWidget {
                 filled: true,
               ),
               style: const TextStyle(color: Colors.black),
+              onChanged: (value) {
+                email = value;
+              },
             ),
             const SizedBox(height: 10),
             TextField(
@@ -49,6 +70,9 @@ class RegisterPage extends StatelessWidget {
                 filled: true,
               ),
               style: const TextStyle(color: Colors.black),
+              onChanged: (value) {
+                username = value;
+              },
             ),
             const SizedBox(height: 10),
             TextField(
@@ -60,6 +84,9 @@ class RegisterPage extends StatelessWidget {
               ),
               style: const TextStyle(color: Colors.black),
               obscureText: true,
+              onChanged: (value) {
+                password = value;
+              },
             ),
             Row(
               children: [
@@ -78,7 +105,8 @@ class RegisterPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Ação do botão de criar conta
+                // Simulação de registro bem-sucedido
+                onRegister(username);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
