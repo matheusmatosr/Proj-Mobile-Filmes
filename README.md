@@ -1,6 +1,6 @@
 ## CineUCL+
 
-O CineUCL+ é um aplicativo que permite aos usuários explorar uma vasta coleção de filmes e séries. Os usuários podem clicar em qualquer conteúdo para visualizar informações detalhadas sobre o conteúdo escolhido, incluindo avaliações, sinopses, elencos, trailers, e comentários de outros usuários. O sistema também possui funcionalidades de login e cadastro de conta, permitindo aos usuários criar perfis personalizados.
+O CineUCL+ é um aplicativo que permite aos usuários explorar uma vasta coleção de filmes e séries. Os usuários podem clicar em qualquer conteúdo para visualizar informações detalhadas sobre o conteúdo escolhido, incluindo avaliações, sinopses, elencos, trailers, e comentários de outros usuários. O sistema também possui funcionalidades de login e cadastro de conta, permitindo aos usuários criar perfis personalizados para salvar suas listas de filmes favoritos.
 
 ### Projeto desenvolvido pelos alunos:
 - 12217002 - Jessica Pereira Rangel
