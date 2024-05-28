@@ -1,0 +1,1 @@
+// Crie um provedor de estado para gerenciar as chamadas à API e o estado dos filmes

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/movie_provider.dart';
+import '../services/imdb_service.dart';
+
 
 class HomePageAfterLogin extends StatelessWidget {
   final String username;
