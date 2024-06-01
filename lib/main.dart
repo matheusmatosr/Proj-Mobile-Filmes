@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
-import 'pages/home_page_after_login.dart';
+import 'pages/main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,13 +45,12 @@ class _MyAppState extends State<MyApp> {
         '/': (context) => const HomePage(),
         '/login': (context) => LoginPage(onLogin: (username) {
               login(username);
-              Navigator.pushReplacementNamed(context, '/home_after_login');
+              Navigator.pushReplacementNamed(context, '/home');
             }),
         '/register': (context) => RegisterPage(onRegister: (username) {
               Navigator.pop(context);
             }),
-        '/home_after_login': (context) =>
-            HomePageAfterLogin(username: username!),
+        '/home': (context) => MainPage(username: username!),
       },
     );
   }
