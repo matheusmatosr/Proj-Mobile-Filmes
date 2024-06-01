@@ -3,12 +3,10 @@ import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
 import '../services/imdb_service.dart';
 
-
-class HomePageAfterLogin extends StatelessWidget {
+class MainPage extends StatelessWidget {
   final String username;
 
-  const HomePageAfterLogin({Key? key, required this.username})
-      : super(key: key);
+  const MainPage({Key? key, required this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
