@@ -13,39 +13,51 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('CineUCL+'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Navegar para a página inicial
-              Navigator.pushReplacementNamed(context, '/');
-            },
-            icon: Icon(Icons.exit_to_app),
-            tooltip: 'Sair',
-          ),
-        ],
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Olá, $username',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.account_circle,
+                  color: Colors.white,
+                  size: 40,
+                ),
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Olá, $username',
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Aproveite os melhores filmes e séries.',
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Implemente a navegação para a próxima página
-              },
-              child: Text('Próxima Página'),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: 'Pesquise aqui',
+                hintStyle: TextStyle(color: Colors.grey[700]),
+                filled: true,
+                fillColor: Colors.grey[800],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
           ],
         ),
