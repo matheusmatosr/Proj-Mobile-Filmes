@@ -14,10 +14,10 @@ class LoginPage extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        centerTitle: true,
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 50),
             RichText(
               text: const TextSpan(
                 children: [
@@ -40,20 +40,19 @@ class LoginPage extends StatelessWidget {
             ),
           ],
         ),
-        centerTitle: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 60),
             const Text(
               'Bem-vindo(a) de novo!',
               style: TextStyle(color: Colors.white, fontSize: 24),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             TextField(
               decoration: const InputDecoration(
                 labelText: 'Endereço de email',
@@ -66,7 +65,7 @@ class LoginPage extends StatelessWidget {
                 email = value;
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             TextField(
               decoration: const InputDecoration(
                 labelText: 'Senha',
@@ -80,19 +79,20 @@ class LoginPage extends StatelessWidget {
                 password = value;
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 // Simulação de login bem-sucedido
                 onLogin(email);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: Colors.green,
+                minimumSize: const Size(150, 50),
                 foregroundColor: Colors.white,
               ),
               child: const Text('Entrar'),
             ),
-            const SizedBox(height: 20),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -111,6 +111,7 @@ class LoginPage extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
