@@ -120,7 +120,7 @@ class RegisterPage extends StatelessWidget {
                     },
                     child: const Text(
                       'Entrar',
-                      style: TextStyle(color: Colors.orange),
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
                 ],
