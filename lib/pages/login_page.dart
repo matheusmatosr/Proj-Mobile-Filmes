@@ -7,7 +7,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String email = '';
+    String username = '';
     String password = '';
 
     return Scaffold(
@@ -32,7 +32,7 @@ class LoginPage extends StatelessWidget {
                     TextSpan(
                       text: 'UCL+',
                       style: TextStyle(
-                          color: Colors.orange,
+                          color: Colors.red,
                           fontSize: 40,
                           fontWeight: FontWeight.bold),
                     ),
@@ -49,14 +49,14 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 40),
             TextField(
               decoration: const InputDecoration(
-                labelText: 'Endereço de email',
+                labelText: 'Usuário',
                 labelStyle: TextStyle(color: Colors.black),
                 fillColor: Colors.white,
                 filled: true,
               ),
               style: const TextStyle(color: Colors.black),
               onChanged: (value) {
-                email = value;
+                username = value;
               },
             ),
             const SizedBox(height: 20),
@@ -77,7 +77,7 @@ class LoginPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Simulação de login bem-sucedido
-                onLogin(email);
+                onLogin(username);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -100,7 +100,7 @@ class LoginPage extends StatelessWidget {
                   },
                   child: const Text(
                     'Registre',
-                    style: TextStyle(color: Colors.orange),
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
               ],

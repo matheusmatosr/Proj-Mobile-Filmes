@@ -33,7 +33,7 @@ class RegisterPage extends StatelessWidget {
                     TextSpan(
                       text: 'UCL+',
                       style: TextStyle(
-                          color: Colors.orange,
+                          color: Colors.red,
                           fontSize: 40,
                           fontWeight: FontWeight.bold),
                     ),

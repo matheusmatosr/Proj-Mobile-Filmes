@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ImdbService {
-  final String apiKey = 'CHAVE_DE_API';
-
-// Exemplo para chamada na tela principal de filmes populares
+class TmdbService {
+  final String apiKey = '61944e64794674cad7a92649ab1a63d5';
 
   Future<List<dynamic>> fetchPopularMovies() async {
-    final String url = 'https://imdb-api.com/en/API/MostPopularMovies/$apiKey';
+    final String url = 'https://api.themoviedb.org/3/movie/popular?api_key=$apiKey&language=pt-BR';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return data['items'];
+      return data['results'];
     } else {
       throw Exception('Failed to load popular movies');
     }
