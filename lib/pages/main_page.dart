@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
 import '../services/tmdb_service.dart';
 import '../widgets/movie_card.dart';
+import 'query_page.dart'; // Importa a página de busca
 
 class MainPage extends StatelessWidget {
   final String username;
@@ -90,15 +91,29 @@ class MainPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Palavra-chave, título, ano...',
-                  hintStyle: TextStyle(color: Colors.grey[700]),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => QueryPage()),
+                  );
+                },
+                child: TextFormField(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QueryPage()),
+                    );
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Palavra-chave, título, ano...',
+                    hintStyle: TextStyle(color: Colors.grey[700]),
+                    filled: true,
+                    fillColor: Colors.grey[800],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                 ),
               ),

@@ -1,10 +1,10 @@
-// Um provedor de estado para gerenciar as chamadas à API e o estado dos filmes
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../services/tmdb_service.dart';
 
 class MovieProvider extends ChangeNotifier {
-  final TmdbService tmdbService;
-  bool isLoading = false;
+  final TmdbService _tmdbService;
+  
+  // Lists to hold the data
   List<dynamic> popularMovies = [];
   List<dynamic> featuredMovies = [];
   List<dynamic> topRatedMovies = [];
@@ -12,62 +12,70 @@ class MovieProvider extends ChangeNotifier {
   List<dynamic> popularSeries = [];
   List<dynamic> topRatedSeries = [];
   List<dynamic> onAirSeries = [];
+  List<dynamic> searchResults = [];
 
-  MovieProvider(this.tmdbService);
+  // State management
+  bool _isLoading = false;
 
+  bool get isLoading => _isLoading;
+
+  MovieProvider(this._tmdbService);
+
+  // Fetch functions
   Future<void> fetchPopularMovies() async {
-    isLoading = true;
-    notifyListeners();
-    popularMovies = await tmdbService.getPopularMovies();
-    isLoading = false;
+    _isLoading = true;
+    popularMovies = await _tmdbService.getPopularMovies();
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> fetchFeaturedMovies() async {
-    isLoading = true;
-    notifyListeners();
-    featuredMovies = await tmdbService.getFeaturedMovies();
-    isLoading = false;
+    _isLoading = true;
+    featuredMovies = await _tmdbService.getFeaturedMovies();
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> fetchTopRatedMovies() async {
-    isLoading = true;
-    notifyListeners();
-    topRatedMovies = await tmdbService.getTopRatedMovies();
-    isLoading = false;
+    _isLoading = true;
+    topRatedMovies = await _tmdbService.getTopRatedMovies();
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> fetchUpcomingMovies() async {
-    isLoading = true;
-    notifyListeners();
-    upcomingMovies = await tmdbService.getUpcomingMovies();
-    isLoading = false;
+    _isLoading = true;
+    upcomingMovies = await _tmdbService.getUpcomingMovies();
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> fetchPopularSeries() async {
-    isLoading = true;
-    notifyListeners();
-    popularSeries = await tmdbService.getPopularSeries();
-    isLoading = false;
+    _isLoading = true;
+    popularSeries = await _tmdbService.getPopularSeries();
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> fetchTopRatedSeries() async {
-    isLoading = true;
-    notifyListeners();
-    topRatedSeries = await tmdbService.getTopRatedSeries();
-    isLoading = false;
+    _isLoading = true;
+    topRatedSeries = await _tmdbService.getTopRatedSeries();
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> fetchOnAirSeries() async {
-    isLoading = true;
+    _isLoading = true;
+    onAirSeries = await _tmdbService.getOnAirSeries();
+    _isLoading = false;
     notifyListeners();
-    onAirSeries = await tmdbService.getOnAirSeries();
-    isLoading = false;
+  }
+
+  // Search function
+  Future<void> searchMoviesAndSeries(String query) async {
+    _isLoading = true;
+    searchResults = await _tmdbService.searchMoviesAndSeries(query);
+    _isLoading = false;
     notifyListeners();
   }
 }

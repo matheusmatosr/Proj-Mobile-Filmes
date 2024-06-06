@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/main_page.dart';
+import 'providers/movie_provider.dart';
+import 'services/tmdb_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,23 +38,26 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CineUCL+',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ChangeNotifierProvider( // Envolve toda a aplicação com ChangeNotifierProvider
+      create: (_) => MovieProvider(TmdbService()), // Inicializa o MovieProvider
+      child: MaterialApp(
+        title: 'CineUCL+',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomePage(),
+          '/login': (context) => LoginPage(onLogin: (username) {
+                login(username);
+                Navigator.pushReplacementNamed(context, '/home');
+              }),
+          '/register': (context) => RegisterPage(onRegister: (username) {
+                Navigator.pop(context);
+              }),
+          '/home': (context) => MainPage(username: username!), // Passa o username para MainPage
+        },
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/login': (context) => LoginPage(onLogin: (username) {
-              login(username);
-              Navigator.pushReplacementNamed(context, '/home');
-            }),
-        '/register': (context) => RegisterPage(onRegister: (username) {
-              Navigator.pop(context);
-            }),
-        '/home': (context) => MainPage(username: username!),
-      },
     );
   }
 }

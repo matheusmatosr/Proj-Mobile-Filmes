@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class TmdbService {
@@ -73,6 +72,16 @@ class TmdbService {
       return data['results'];
     } else {
       throw Exception('Failed to load on air series');
+    }
+  }
+
+  Future<List<dynamic>> searchMoviesAndSeries(String query) async {
+    final response = await http.get(Uri.parse('$_baseUrl/search/multi?api_key=$_apiKey&language=pt-BR&query=$query'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['results'];
+    } else {
+      throw Exception('Failed to search movies and series');
     }
   }
 }
