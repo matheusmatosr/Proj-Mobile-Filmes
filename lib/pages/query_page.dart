@@ -80,13 +80,13 @@ class QueryPage extends StatelessWidget {
       return MovieCard(
         title: item['title'],
         posterUrl: 'https://image.tmdb.org/t/p/w200${item['poster_path']}',
-        releaseDate: item['release_date'] ?? 'Desconhecido',
+        releaseDate: item['release_date'] != null ? item['release_date'].split('-')[0] : 'Desconhecido',
       );
     } else if (item['media_type'] == 'tv') {
       return MovieCard(
         title: item['name'],
         posterUrl: 'https://image.tmdb.org/t/p/w200${item['poster_path']}',
-        releaseDate: item['first_air_date'] ?? 'Desconhecido',
+        releaseDate: item['first_air_date'] != null ? item['first_air_date'].split('-')[0] : 'Desconhecido',
       );
     }
     return SizedBox.shrink();
