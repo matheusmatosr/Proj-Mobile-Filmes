@@ -11,53 +11,54 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos ChangeNotifierProvider para fornecer a instância do MovieProvider ao widget MainPage
     return ChangeNotifierProvider(
       create: (_) => MovieProvider(TmdbService())..fetchPopularMovies(),
       child: Scaffold(
         backgroundColor: Colors.black,
-        // Configuração do AppBar com o título e ícones de navegação
         appBar: AppBar(
           backgroundColor: Colors.black,
-          automaticallyImplyLeading: false, // Remove o botão de voltar padrão
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Cine',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
+          automaticallyImplyLeading: false,
+          title: Center(
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Cine',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
-                    TextSpan(
-                      text: 'UCL+',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  TextSpan(
+                    text: 'UCL+',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-          actions: [],
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              icon: Icon(Icons.exit_to_app),
+              tooltip: 'Sair',
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
                     Icons.account_circle,
@@ -69,12 +70,12 @@ class MainPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Olá, $username',
+                        'Olá, $username!',
                         style: TextStyle(color: Colors.white, fontSize: 24),
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Aproveite os melhores filmes e séries.',
+                        'Aproveite os melhores filmes e séries',
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       ),
                     ],
@@ -82,17 +83,15 @@ class MainPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
-              Center(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Pesquise aqui',
-                    hintStyle: TextStyle(color: Colors.grey[700]),
-                    filled: true,
-                    fillColor: Colors.grey[800],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Palavra-chave, título, ano...',
+                  hintStyle: TextStyle(color: Colors.grey[700]),
+                  filled: true,
+                  fillColor: Colors.grey[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
@@ -104,9 +103,8 @@ class MainPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
+              SizedBox(height: 10),
               Expanded(
-                // Usamos o Consumer<MovieProvider> para construir uma lista horizontal de filmes populares.
-                // Carrega as imagens e títulos dos filmes.
                 child: Consumer<MovieProvider>(
                   builder: (context, movieProvider, child) {
                     if (movieProvider.isLoading) {
@@ -137,47 +135,39 @@ class MainPage extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              // Outras seções (Filmes em destaque, Séries sugeridas, Campeões de audiência)
+              SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Categorias',
+                  'Filmes em destaque',
                   style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              Expanded(
-                child: Consumer<MovieProvider>(
-                  builder: (context, movieProvider, child) {
-                    if (movieProvider.isLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (movieProvider.movies.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'Nenhum filme encontrado.',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: movieProvider.movies.length,
-                      itemBuilder: (context, index) {
-                        final movie = movieProvider.movies[index];
-                        final posterUrl = 'https://image.tmdb.org/t/p/w200${movie['poster_path']}';
-                        final releaseDate = movie['release_date'] != null ? movie['release_date'].split('-')[0] : 'Desconhecido';
-                        return MovieCard(
-                          title: movie['title'],
-                          posterUrl: posterUrl,
-                          releaseDate: releaseDate,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
+              // Implementação semelhante para outras listas horizontais
+              // ...
             ],
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.black,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.red),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite, color: Colors.red),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: Colors.red),
+              label: '',
+            ),
+          ],
+          currentIndex: 0,
+          selectedItemColor: Colors.amber[800],
+          onTap: (index) {},
         ),
       ),
     );
