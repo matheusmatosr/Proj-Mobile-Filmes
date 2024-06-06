@@ -2,26 +2,72 @@
 import 'package:flutter/material.dart';
 import '../services/tmdb_service.dart';
 
-class MovieProvider with ChangeNotifier {
-  final TmdbService _tmdbService;
-  List<dynamic> _movies = [];
-  bool _isLoading = false;
+class MovieProvider extends ChangeNotifier {
+  final TmdbService tmdbService;
+  bool isLoading = false;
+  List<dynamic> popularMovies = [];
+  List<dynamic> featuredMovies = [];
+  List<dynamic> topRatedMovies = [];
+  List<dynamic> upcomingMovies = [];
+  List<dynamic> popularSeries = [];
+  List<dynamic> topRatedSeries = [];
+  List<dynamic> onAirSeries = [];
 
-  MovieProvider(this._tmdbService);
-
-  List<dynamic> get movies => _movies;
-  bool get isLoading => _isLoading;
+  MovieProvider(this.tmdbService);
 
   Future<void> fetchPopularMovies() async {
-    _isLoading = true;
+    isLoading = true;
     notifyListeners();
-    try {
-      _movies = await _tmdbService.fetchPopularMovies();
-    } catch (e) {
-      print(e);
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    popularMovies = await tmdbService.getPopularMovies();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchFeaturedMovies() async {
+    isLoading = true;
+    notifyListeners();
+    featuredMovies = await tmdbService.getFeaturedMovies();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchTopRatedMovies() async {
+    isLoading = true;
+    notifyListeners();
+    topRatedMovies = await tmdbService.getTopRatedMovies();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchUpcomingMovies() async {
+    isLoading = true;
+    notifyListeners();
+    upcomingMovies = await tmdbService.getUpcomingMovies();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchPopularSeries() async {
+    isLoading = true;
+    notifyListeners();
+    popularSeries = await tmdbService.getPopularSeries();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchTopRatedSeries() async {
+    isLoading = true;
+    notifyListeners();
+    topRatedSeries = await tmdbService.getTopRatedSeries();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchOnAirSeries() async {
+    isLoading = true;
+    notifyListeners();
+    onAirSeries = await tmdbService.getOnAirSeries();
+    isLoading = false;
+    notifyListeners();
   }
 }
