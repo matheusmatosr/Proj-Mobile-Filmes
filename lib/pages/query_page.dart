@@ -63,7 +63,10 @@ class QueryPage extends StatelessWidget {
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {
                       final item = searchResults[index];
-                      return _buildMovieCard(item);
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20), // Adiciona espaço na parte inferior do card
+                        child: _buildMovieCard(item),
+                      );
                     },
                   ),
                 );

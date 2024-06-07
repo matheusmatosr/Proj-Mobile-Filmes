@@ -125,31 +125,31 @@ class MainPage extends StatelessWidget {
                     _buildSectionTitle('Filmes Populares'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'popularMovies'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Filmes em destaque'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'featuredMovies'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Mais bem avaliados'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'topRatedMovies'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Lançamentos'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'upcomingMovies'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV Populares'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'popularSeries'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV Mais Bem Avaliadas'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'topRatedSeries'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV no Ar Atualmente'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'onAirSeries'),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
                   ],
                 ),
               ),
@@ -195,23 +195,23 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildMovieList(BuildContext context, String listName) {
-    return SizedBox(
-      height: 220, // Aumenta a altura para aumentar o espaço
-      child: Consumer<MovieProvider>(
-        builder: (context, movieProvider, child) {
-          if (movieProvider.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final movies = _getMovieList(movieProvider, listName);
-          if (movies.isEmpty) {
-            return Center(
-              child: Text(
-                'Nenhum filme encontrado.',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
-          return ListView.builder(
+    return Consumer<MovieProvider>(
+      builder: (context, movieProvider, child) {
+        if (movieProvider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+        final movies = _getMovieList(movieProvider, listName);
+        if (movies.isEmpty) {
+          return Center(
+            child: Text(
+              'Nenhum filme encontrado.',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        }
+        return SizedBox(
+          height: 260, // Ajusta a altura dos cards
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
             itemBuilder: (context, index) {
@@ -227,30 +227,30 @@ class MainPage extends StatelessWidget {
                 ),
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildSeriesList(BuildContext context, String listName) {
-    return SizedBox(
-      height: 220, // Aumenta a altura para aumentar o espaço
-      child: Consumer<MovieProvider>(
-        builder: (context, movieProvider, child) {
-          if (movieProvider.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final series = _getSeriesList(movieProvider, listName);
-          if (series.isEmpty) {
-            return Center(
-              child: Text(
-                'Nenhuma série encontrada.',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }
-          return ListView.builder(
+    return Consumer<MovieProvider>(
+      builder: (context, movieProvider, child) {
+        if (movieProvider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+        final series = _getSeriesList(movieProvider, listName);
+        if (series.isEmpty) {
+          return Center(
+            child: Text(
+              'Nenhuma série encontrada.',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        }
+        return SizedBox(
+          height: 260, // Ajusta a altura dos cards
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: series.length,
             itemBuilder: (context, index) {
@@ -266,9 +266,9 @@ class MainPage extends StatelessWidget {
                 ),
               );
             },
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
