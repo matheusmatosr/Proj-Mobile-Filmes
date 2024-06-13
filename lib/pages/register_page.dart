@@ -104,7 +104,7 @@ class RegisterPageState extends State<RegisterPage> {
                 ),
                 const Expanded(
                   child: Text(
-                    'Concorde com os Termos e Condições',
+                    'Concorde com os Termos e Condições*',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

@@ -31,7 +31,7 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _resetPassword() {
+  void _resetPassword(BuildContext context) {
     if (_emailController.text.isNotEmpty) {
       FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailController.text);
@@ -107,6 +107,13 @@ class LoginPageState extends State<LoginPage> {
               ),
               style: const TextStyle(color: Colors.black),
               obscureText: true,
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () => _resetPassword(context),
+                child: const Text('RESETAR SENHA?'),
+              ),
             ),
             const SizedBox(height: 40),
             ElevatedButton(
