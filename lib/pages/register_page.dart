@@ -1,16 +1,25 @@
+import 'package:appcontador/services/autenticacao_servico.dart';
 import 'package:flutter/material.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   final Function(String) onRegister;
-
   const RegisterPage({Key? key, required this.onRegister}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    String email = '';
-    String username = '';
-    String password = '';
+  RegisterPageState createState() => RegisterPageState();
+}
 
+class RegisterPageState extends State<RegisterPage> {
+  bool _termsAccepted = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  AutenticacaoServico _autenticacaoServico = AutenticacaoServico();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -45,14 +54,12 @@ class RegisterPage extends StatelessWidget {
             const Center(
               child: Text(
                 'Cadastre-se',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
             const SizedBox(height: 40),
             TextField(
+              controller: _emailController,
               decoration: const InputDecoration(
                 labelText: 'Endereço de email',
                 labelStyle: TextStyle(color: Colors.black),
@@ -60,12 +67,10 @@ class RegisterPage extends StatelessWidget {
                 filled: true,
               ),
               style: const TextStyle(color: Colors.black),
-              onChanged: (value) {
-                email = value;
-              },
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: _usernameController,
               decoration: const InputDecoration(
                 labelText: 'Username',
                 labelStyle: TextStyle(color: Colors.black),
@@ -73,12 +78,10 @@ class RegisterPage extends StatelessWidget {
                 filled: true,
               ),
               style: const TextStyle(color: Colors.black),
-              onChanged: (value) {
-                username = value;
-              },
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: _passwordController,
               decoration: const InputDecoration(
                 labelText: 'Senha',
                 labelStyle: TextStyle(color: Colors.black),
@@ -87,15 +90,30 @@ class RegisterPage extends StatelessWidget {
               ),
               style: const TextStyle(color: Colors.black),
               obscureText: true,
-              onChanged: (value) {
-                password = value;
-              },
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Checkbox(
+                  value: _termsAccepted,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _termsAccepted = value!;
+                    });
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    'Concorde com os Termos e Condições',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                // Simulação de registro bem-sucedido
-                onRegister(username);
+                registrar();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -110,18 +128,14 @@ class RegisterPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Já possui uma conta?',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  const Text('Já possui uma conta?',
+                      style: TextStyle(color: Colors.white)),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/login');
                     },
-                    child: const Text(
-                      'Entrar',
-                      style: TextStyle(color: Colors.red),
-                    ),
+                    child: const Text('Entrar',
+                        style: TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
@@ -130,5 +144,46 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  registrar() async {
+    String nome = _usernameController.text;
+    String email = _emailController.text;
+    String senha = _passwordController.text;
+
+    if (nome.isEmpty || email.isEmpty || senha.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Todos os campos devem ser preenchidos')),
+      );
+      return;
+    }
+
+    print(nome);
+    print(email);
+    print(senha);
+
+    if (_termsAccepted) {
+      try {
+        await _autenticacaoServico.cadastrarUsuario(
+          nome: nome,
+          senha: senha,
+          email: email,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao cadastrar usuário: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Você deve aceitar os Termos e Condições'),
+        ),
+      );
+    }
   }
 }

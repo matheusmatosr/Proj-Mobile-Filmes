@@ -1,15 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final Function(String) onLogin;
 
   const LoginPage({Key? key, required this.onLogin}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    String username = '';
-    String password = '';
+  LoginPageState createState() => LoginPageState();
+}
 
+class LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _usernameController.text,
+        password: _passwordController.text,
+      );
+      if (!mounted) return;
+      widget.onLogin(_usernameController.text);
+      Navigator.pushNamed(
+          context, '/home'); // Assuming '/home' is the home screen route
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Falha ao entrar: ${e.message}')),
+      );
+    }
+  }
+
+  void _resetPassword() {
+    if (_usernameController.text.isNotEmpty) {
+      FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _usernameController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content:
+                Text('Link para resetar a senha enviado para o seu e-mail')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, insira seu e-mail')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -48,19 +87,18 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             TextField(
+              controller: _usernameController,
               decoration: const InputDecoration(
-                labelText: 'Usuário',
+                labelText: 'Email',
                 labelStyle: TextStyle(color: Colors.black),
                 fillColor: Colors.white,
                 filled: true,
               ),
               style: const TextStyle(color: Colors.black),
-              onChanged: (value) {
-                username = value;
-              },
             ),
             const SizedBox(height: 20),
             TextField(
+              controller: _passwordController,
               decoration: const InputDecoration(
                 labelText: 'Senha',
                 labelStyle: TextStyle(color: Colors.black),
@@ -69,16 +107,10 @@ class LoginPage extends StatelessWidget {
               ),
               style: const TextStyle(color: Colors.black),
               obscureText: true,
-              onChanged: (value) {
-                password = value;
-              },
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () {
-                // Simulação de login bem-sucedido
-                onLogin(username);
-              },
+              onPressed: _login,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 minimumSize: const Size(150, 50),
@@ -90,18 +122,14 @@ class LoginPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Não tem uma conta?',
-                  style: TextStyle(color: Colors.white),
-                ),
+                const Text('Não tem uma conta?',
+                    style: TextStyle(color: Colors.white)),
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/register');
                   },
-                  child: const Text(
-                    'Registre',
-                    style: TextStyle(color: Colors.red),
-                  ),
+                  child: const Text('Registre',
+                      style: TextStyle(color: Colors.red)),
                 ),
               ],
             ),

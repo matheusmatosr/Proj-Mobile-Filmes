@@ -1,3 +1,5 @@
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
@@ -7,7 +9,11 @@ import 'pages/main_page.dart';
 import 'providers/movie_provider.dart';
 import 'services/tmdb_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -38,7 +44,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider( // Envolve toda a aplicação com ChangeNotifierProvider
+    return ChangeNotifierProvider(
+      // Envolve toda a aplicação com ChangeNotifierProvider
       create: (_) => MovieProvider(TmdbService()), // Inicializa o MovieProvider
       child: MaterialApp(
         title: 'CineUCL+',
@@ -55,7 +62,8 @@ class _MyAppState extends State<MyApp> {
           '/register': (context) => RegisterPage(onRegister: (username) {
                 Navigator.pop(context);
               }),
-          '/home': (context) => MainPage(username: username!), // Passa o username para MainPage
+          '/home': (context) =>
+              MainPage(username: username!), // Passa o username para MainPage
         },
       ),
     );
