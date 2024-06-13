@@ -11,8 +11,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
     try {
@@ -89,7 +89,7 @@ class LoginPageState extends State<LoginPage> {
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
-                labelText: 'Usuário',
+                labelText: 'Email',
                 labelStyle: TextStyle(color: Colors.black),
                 fillColor: Colors.white,
                 filled: true,

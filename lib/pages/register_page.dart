@@ -1,9 +1,9 @@
+import 'package:appcontador/services/autenticacao_servico.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function(String) onRegister;
-
   const RegisterPage({Key? key, required this.onRegister}) : super(key: key);
 
   @override
@@ -11,25 +11,12 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterPageState extends State<RegisterPage> {
-  final _emailController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  bool _termsAccepted = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _register() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      if (!mounted) return;
-      widget.onRegister(_usernameController.text);
-      Navigator.pushNamed(context, '/login');
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Falha ao registrar: ${e.message}')),
-      );
-    }
-  }
+  AutenticacaoServico _autenticacaoServico = AutenticacaoServico();
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +91,30 @@ class RegisterPageState extends State<RegisterPage> {
               style: const TextStyle(color: Colors.black),
               obscureText: true,
             ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Checkbox(
+                  value: _termsAccepted,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _termsAccepted = value!;
+                    });
+                  },
+                ),
+                const Expanded(
+                  child: Text(
+                    'Concorde com os Termos e Condições',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: _register,
+              onPressed: () {
+                registrar();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 minimumSize: const Size(150, 50),
@@ -136,5 +144,46 @@ class RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  registrar() async {
+    String nome = _usernameController.text;
+    String email = _emailController.text;
+    String senha = _passwordController.text;
+
+    if (nome.isEmpty || email.isEmpty || senha.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Todos os campos devem ser preenchidos')),
+      );
+      return;
+    }
+
+    print(nome);
+    print(email);
+    print(senha);
+
+    if (_termsAccepted) {
+      try {
+        await _autenticacaoServico.cadastrarUsuario(
+          nome: nome,
+          senha: senha,
+          email: email,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+        );
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao cadastrar usuário: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Você deve aceitar os Termos e Condições'),
+        ),
+      );
+    }
   }
 }
