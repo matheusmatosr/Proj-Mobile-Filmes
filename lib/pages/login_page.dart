@@ -11,17 +11,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _usernameController.text,
+        email: _emailController.text,
         password: _passwordController.text,
       );
       if (!mounted) return;
-      widget.onLogin(_usernameController.text);
+      widget.onLogin(_emailController.text);
       Navigator.pushNamed(
           context, '/home'); // Assuming '/home' is the home screen route
     } on FirebaseAuthException catch (e) {
@@ -32,9 +32,9 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void _resetPassword() {
-    if (_usernameController.text.isNotEmpty) {
+    if (_emailController.text.isNotEmpty) {
       FirebaseAuth.instance
-          .sendPasswordResetEmail(email: _usernameController.text);
+          .sendPasswordResetEmail(email: _emailController.text);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content:
@@ -87,7 +87,7 @@ class LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 40),
             TextField(
-              controller: _usernameController,
+              controller: _emailController,
               decoration: const InputDecoration(
                 labelText: 'Email',
                 labelStyle: TextStyle(color: Colors.black),
