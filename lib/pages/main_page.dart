@@ -125,31 +125,38 @@ class MainPage extends StatelessWidget {
                     _buildSectionTitle('Filmes Populares'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'popularMovies'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Filmes em destaque'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'featuredMovies'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Mais bem avaliados'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'topRatedMovies'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Lançamentos'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'upcomingMovies'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV Populares'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'popularSeries'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV Mais Bem Avaliadas'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'topRatedSeries'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV no Ar Atualmente'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'onAirSeries'),
-                    SizedBox(height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(
+                        height: 30), // Aumenta o espaçamento entre as seções
                   ],
                 ),
               ),
@@ -210,14 +217,17 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 260, // Ajusta a altura dos cards
+          height: 290, // Ajusta a altura dos cards
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
             itemBuilder: (context, index) {
               final movie = movies[index];
-              final posterUrl = 'https://image.tmdb.org/t/p/w200${movie['poster_path']}';
-              final releaseDate = movie['release_date'] != null ? movie['release_date'].split('-')[0] : 'Desconhecido';
+              final posterUrl =
+                  'https://image.tmdb.org/t/p/w200${movie['poster_path']}';
+              final releaseDate = movie['release_date'] != null
+                  ? movie['release_date'].split('-')[0]
+                  : 'Desconhecido';
               return Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: MovieCard(
@@ -249,14 +259,17 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 260, // Ajusta a altura dos cards
+          height: 290, // Ajusta a altura dos cards
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: series.length,
             itemBuilder: (context, index) {
               final serie = series[index];
-              final posterUrl = 'https://image.tmdb.org/t/p/w200${serie['poster_path']}';
-              final releaseDate = serie['first_air_date'] != null ? serie['first_air_date'].split('-')[0] : 'Desconhecido';
+              final posterUrl =
+                  'https://image.tmdb.org/t/p/w200${serie['poster_path']}';
+              final releaseDate = serie['first_air_date'] != null
+                  ? serie['first_air_date'].split('-')[0]
+                  : 'Desconhecido';
               return Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: MovieCard(

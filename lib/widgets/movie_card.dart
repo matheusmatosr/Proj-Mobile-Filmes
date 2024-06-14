@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../pages/details_page.dart';
 
 // Sobre este arquivo:
-// - É utilizado para exibir informações de um filme de forma estruturada e estilizada. 
+// - É utilizado para exibir informações de um filme de forma estruturada e estilizada.
 // - Encapsula a apresentação de detalhes como título, imagem do poster e data de lançamento, seguindo o layout e estilo definidos no design da aplicação.
 // - Este widget é reutilizado em várias partes da interface onde cards de filmes são necessários, mantendo o código organizado e promovendo a reutilização de código.
 
@@ -22,9 +22,9 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140, // Ajusta a largura do card
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8), // Aumenta o padding do card
-      margin: EdgeInsets.symmetric(horizontal: 4), // Aumenta o espaçamento lateral entre os cards
+      width: 140,
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      margin: EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: Colors.grey[900],
         borderRadius: BorderRadius.circular(10),
@@ -41,45 +41,43 @@ class MovieCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 10), // Aumenta o espaçamento entre a imagem e o título
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Lançamento: $releaseDate',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+          SizedBox(height: 4),
+          Text(
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12, // Reduz um pouco o tamanho da fonte
             ),
           ),
-          SizedBox(height: 10), // Aumenta o espaçamento entre o título e o botão de detalhes
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DetailsPage(item: {},)),
-              );
-            },
-            child: Text(
-              'Detalhes',
-              style: TextStyle(
-                color: Colors.red,
-                decoration: TextDecoration.underline,
+          SizedBox(height: 4),
+          Text(
+            'Lançamento: $releaseDate',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
+          ),
+          Spacer(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailsPage(item: {}),
+                  ),
+                );
+              },
+              child: Text(
+                'Detalhes',
+                style: TextStyle(
+                  color: Colors.red,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
