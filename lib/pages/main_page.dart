@@ -124,37 +124,37 @@ class MainPage extends StatelessWidget {
                   children: [
                     _buildSectionTitle('Filmes Populares'),
                     SizedBox(height: 10),
-                    _buildMovieList(context, 'popularMovies'),
+                    _buildMovieList(context, 'popularMovies', 'movie'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Filmes em destaque'),
                     SizedBox(height: 10),
-                    _buildMovieList(context, 'featuredMovies'),
+                    _buildMovieList(context, 'featuredMovies', 'movie'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Mais bem avaliados'),
                     SizedBox(height: 10),
-                    _buildMovieList(context, 'topRatedMovies'),
+                    _buildMovieList(context, 'topRatedMovies', 'movie'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Lançamentos'),
                     SizedBox(height: 10),
-                    _buildMovieList(context, 'upcomingMovies'),
+                    _buildMovieList(context, 'upcomingMovies', 'movie'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV Populares'),
                     SizedBox(height: 10),
-                    _buildSeriesList(context, 'popularSeries'),
+                    _buildSeriesList(context, 'popularSeries', 'tv'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV Mais Bem Avaliadas'),
                     SizedBox(height: 10),
-                    _buildSeriesList(context, 'topRatedSeries'),
+                    _buildSeriesList(context, 'topRatedSeries', 'tv'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                     _buildSectionTitle('Séries de TV no Ar Atualmente'),
                     SizedBox(height: 10),
-                    _buildSeriesList(context, 'onAirSeries'),
+                    _buildSeriesList(context, 'onAirSeries', 'tv'),
                     SizedBox(
                         height: 30), // Aumenta o espaçamento entre as seções
                   ],
@@ -201,7 +201,7 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMovieList(BuildContext context, String listName) {
+  Widget _buildMovieList(BuildContext context, String listName, String type) {
     return Consumer<MovieProvider>(
       builder: (context, movieProvider, child) {
         if (movieProvider.isLoading) {
@@ -234,6 +234,7 @@ class MainPage extends StatelessWidget {
                   title: movie['title'],
                   posterUrl: posterUrl,
                   releaseDate: releaseDate,
+                  item: movie, // Passa o item para MovieCard
                 ),
               );
             },
@@ -243,7 +244,7 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSeriesList(BuildContext context, String listName) {
+  Widget _buildSeriesList(BuildContext context, String listName, String type) {
     return Consumer<MovieProvider>(
       builder: (context, movieProvider, child) {
         if (movieProvider.isLoading) {
@@ -276,6 +277,7 @@ class MainPage extends StatelessWidget {
                   title: serie['name'],
                   posterUrl: posterUrl,
                   releaseDate: releaseDate,
+                  item: serie, // Passa o item para MovieCard
                 ),
               );
             },

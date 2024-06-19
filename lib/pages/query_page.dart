@@ -13,8 +13,7 @@ class QueryPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Pesquisar Filmes e Séries',
-          style: TextStyle(
-              color: Colors.white), // Altera a cor do título para branco
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
       ),
@@ -57,19 +56,30 @@ class QueryPage extends StatelessWidget {
                 return Expanded(
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
+                      maxCrossAxisExtent:
+                          250, // Ajusta a largura máxima do card
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 20, // Aumenta o espaço entre as linhas
-                      childAspectRatio: 0.6,
+                      childAspectRatio: 0.7, // Ajusta a proporção do card
                     ),
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {
                       final item = searchResults[index];
                       return Padding(
-                        padding: const EdgeInsets.only(
-                            bottom:
-                                20), // Adiciona espaço na parte inferior do card
-                        child: _buildMovieCard(item),
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: MovieCard(
+                          title: item['title'] ??
+                              item['name'] ??
+                              'Título Desconhecido',
+                          posterUrl:
+                              'https://image.tmdb.org/t/p/w200${item['poster_path']}',
+                          releaseDate: item['release_date'] != null
+                              ? item['release_date'].split('-')[0]
+                              : item['first_air_date'] != null
+                                  ? item['first_air_date'].split('-')[0]
+                                  : 'Desconhecido',
+                          item: item,
+                        ),
                       );
                     },
                   ),
@@ -80,26 +90,5 @@ class QueryPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildMovieCard(Map<String, dynamic> item) {
-    if (item['media_type'] == 'movie') {
-      return MovieCard(
-        title: item['title'],
-        posterUrl: 'https://image.tmdb.org/t/p/w200${item['poster_path']}',
-        releaseDate: item['release_date'] != null
-            ? item['release_date'].split('-')[0]
-            : 'Desconhecido',
-      );
-    } else if (item['media_type'] == 'tv') {
-      return MovieCard(
-        title: item['name'],
-        posterUrl: 'https://image.tmdb.org/t/p/w200${item['poster_path']}',
-        releaseDate: item['first_air_date'] != null
-            ? item['first_air_date'].split('-')[0]
-            : 'Desconhecido',
-      );
-    }
-    return SizedBox.shrink();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../pages/details_page.dart';
 
 // Sobre este arquivo:
@@ -11,12 +10,14 @@ class MovieCard extends StatelessWidget {
   final String title;
   final String posterUrl;
   final String releaseDate;
+  final Map<String, dynamic> item;
 
   const MovieCard({
     Key? key,
     required this.title,
     required this.posterUrl,
     required this.releaseDate,
+    required this.item,
   }) : super(key: key);
 
   @override
@@ -68,7 +69,7 @@ class MovieCard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailsPage(item: {}),
+                    builder: (context) => DetailsPage(item: item),
                   ),
                 );
               },
