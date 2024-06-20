@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
-class DetailsPage extends StatelessWidget {
+class DetailsPage extends StatefulWidget {
   final Map<String, dynamic> item;
 
   const DetailsPage({Key? key, required this.item}) : super(key: key);
+
+  @override
+  _DetailsPageState createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  bool isSaved = false; // Estado para controlar se o item está salvo ou não
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(item['title'] ?? item['name'] ?? 'Detalhes'),
+        title: Text(widget.item['title'] ?? widget.item['name'] ?? 'Detalhes'),
         backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
@@ -30,7 +37,7 @@ class DetailsPage extends StatelessWidget {
   }
 
   Widget _buildPoster(BuildContext context) {
-    String posterPath = item['poster_path'];
+    String posterPath = widget.item['poster_path'];
     return AspectRatio(
       aspectRatio: 2 / 2.5, // Reduzindo o aspectRatio para diminuir o tamanho
       child: ClipRRect(
@@ -46,30 +53,31 @@ class DetailsPage extends StatelessWidget {
   Widget _buildTitle(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            item['media_type'] == 'movie' ? 'Filme' : 'Série de TV',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.orange,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            item['title'] ?? item['name'] ?? 'Título Desconhecido',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                widget.item['media_type'] == 'movie' ? 'Filme' : 'Série de TV',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.orange,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                widget.item['title'] ?? widget.item['name'] ?? 'Título Desconhecido',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 8),
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     _getReleaseYear(),
@@ -116,13 +124,25 @@ class DetailsPage extends StatelessWidget {
               ),
             ],
           ),
+          IconButton(
+            icon: Icon(
+              Icons.bookmark,
+              color: isSaved ? Colors.red : Colors.red.withOpacity(0.5),
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                isSaved = !isSaved;
+              });
+            },
+          ),
         ],
       ),
     );
   }
 
   Widget _buildDescription() {
-    String overview = item['overview'] ?? 'Descrição não disponível.';
+    String overview = widget.item['overview'] ?? 'Descrição não disponível.';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Text(
@@ -136,18 +156,18 @@ class DetailsPage extends StatelessWidget {
   }
 
   String _getReleaseYear() {
-    String releaseDate = item['release_date'] ?? item['first_air_date'] ?? 'Não especificado';
+    String releaseDate = widget.item['release_date'] ?? widget.item['first_air_date'] ?? 'Não especificado';
     return releaseDate.isNotEmpty ? releaseDate.substring(0, 4) : 'Não especificado';
   }
 
   String _getRating() {
-    double rating = item['vote_average'] ?? 0.0;
+    double rating = widget.item['vote_average'] ?? 0.0;
     return rating.toStringAsFixed(1);
   }
 
   String _getAgeRestriction() {
     String certification = 'Não especificado'; // Inicialmente assume como não especificado
-    List<dynamic>? releaseDates = item['release_dates']?['results']; // Obtém as datas de lançamento
+    List<dynamic>? releaseDates = widget.item['release_dates']?['results']; // Obtém as datas de lançamento
 
     // Busca pela certificação do país "US" (Estados Unidos) se disponível
     if (releaseDates != null) {
@@ -169,7 +189,7 @@ class DetailsPage extends StatelessWidget {
   }
 
   String _getDuration() {
-    int runtime = item['runtime'] ?? item['episode_run_time']?.first ?? 0;
+    int runtime = widget.item['runtime'] ?? widget.item['episode_run_time']?.first ?? 0;
     int hours = runtime ~/ 60;
     int minutes = runtime % 60;
     String duration = hours > 0 ? '$hours h $minutes min' : '$minutes min';
