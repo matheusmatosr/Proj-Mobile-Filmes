@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
 import '../services/tmdb_service.dart';
 import '../widgets/movie_card.dart';
-import 'query_page.dart'; // Importa a página de busca
+import 'query_page.dart';
 
 class MainPage extends StatelessWidget {
   final String username;
@@ -125,38 +125,31 @@ class MainPage extends StatelessWidget {
                     _buildSectionTitle('Filmes Populares'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'popularMovies', 'movie'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                     _buildSectionTitle('Filmes em destaque'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'featuredMovies', 'movie'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                     _buildSectionTitle('Mais bem avaliados'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'topRatedMovies', 'movie'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                     _buildSectionTitle('Lançamentos'),
                     SizedBox(height: 10),
                     _buildMovieList(context, 'upcomingMovies', 'movie'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                     _buildSectionTitle('Séries de TV Populares'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'popularSeries', 'tv'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                     _buildSectionTitle('Séries de TV Mais Bem Avaliadas'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'topRatedSeries', 'tv'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                     _buildSectionTitle('Séries de TV no Ar Atualmente'),
                     SizedBox(height: 10),
                     _buildSeriesList(context, 'onAirSeries', 'tv'),
-                    SizedBox(
-                        height: 30), // Aumenta o espaçamento entre as seções
+                    SizedBox(height: 30),
                   ],
                 ),
               ),
@@ -181,7 +174,11 @@ class MainPage extends StatelessWidget {
           ],
           currentIndex: 0,
           selectedItemColor: Colors.amber[800],
-          onTap: (index) {},
+          onTap: (index) {
+            if (index == 1) {
+              Navigator.pushNamed(context, '/saved');
+            }
+          },
         ),
       ),
     );

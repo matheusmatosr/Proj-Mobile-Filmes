@@ -6,9 +6,9 @@ import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/main_page.dart';
-import 'pages/save_page.dart'; // Importar SavePage
+import 'pages/save_page.dart';
 import 'providers/movie_provider.dart';
-import 'providers/saved_items_provider.dart'; // Importar SavedItemsProvider
+import 'providers/saved_items_provider.dart';
 import 'services/tmdb_service.dart';
 
 void main() async {
@@ -49,8 +49,12 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       // Usar MultiProvider para envolver toda a aplicação com múltiplos providers
       providers: [
-        ChangeNotifierProvider(create: (_) => MovieProvider(TmdbService())), // Inicializa o MovieProvider
-        ChangeNotifierProvider(create: (_) => SavedItemsProvider()), // Inicializa o SavedItemsProvider
+        ChangeNotifierProvider(
+            create: (_) =>
+                MovieProvider(TmdbService())), // Inicializa o MovieProvider
+        ChangeNotifierProvider(
+            create: (_) =>
+                SavedItemsProvider()), // Inicializa o SavedItemsProvider
       ],
       child: MaterialApp(
         title: 'CineUCL+',
@@ -67,8 +71,10 @@ class _MyAppState extends State<MyApp> {
           '/register': (context) => RegisterPage(onRegister: (username) {
                 Navigator.pop(context);
               }),
-          '/home': (context) => MainPage(username: username!), // Passa o username para MainPage
-          '/saved': (context) => const SavePage(), // Adiciona a rota para SavePage
+          '/home': (context) =>
+              MainPage(username: username!), // Passa o username para MainPage
+          '/saved': (context) =>
+              const SavePage(), // Adiciona a rota para SavePage
         },
       ),
     );

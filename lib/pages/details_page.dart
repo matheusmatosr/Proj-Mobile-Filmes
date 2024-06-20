@@ -17,7 +17,8 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void initState() {
     super.initState();
-    final savedItemsProvider = Provider.of<SavedItemsProvider>(context, listen: false);
+    final savedItemsProvider =
+        Provider.of<SavedItemsProvider>(context, listen: false);
     isSaved = savedItemsProvider.isSaved(widget.item);
   }
 
@@ -47,13 +48,16 @@ class _DetailsPageState extends State<DetailsPage> {
 
   Widget _buildPoster(BuildContext context) {
     String posterPath = widget.item['poster_path'];
-    return AspectRatio(
-      aspectRatio: 2 / 2.5,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0),
-        child: Image.network(
-          'https://image.tmdb.org/t/p/w500$posterPath',
-          fit: BoxFit.cover,
+    return Center(
+      child: SizedBox(
+        width: 200,
+        height: 300,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: Image.network(
+            'https://image.tmdb.org/t/p/w500$posterPath',
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
@@ -77,7 +81,9 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
               SizedBox(height: 8),
               Text(
-                widget.item['title'] ?? widget.item['name'] ?? 'Título Desconhecido',
+                widget.item['title'] ??
+                    widget.item['name'] ??
+                    'Título Desconhecido',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -143,7 +149,8 @@ class _DetailsPageState extends State<DetailsPage> {
               setState(() {
                 isSaved = !isSaved;
               });
-              final savedItemsProvider = Provider.of<SavedItemsProvider>(context, listen: false);
+              final savedItemsProvider =
+                  Provider.of<SavedItemsProvider>(context, listen: false);
               if (isSaved) {
                 savedItemsProvider.addSavedItem(widget.item);
               } else {
@@ -171,8 +178,12 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getReleaseYear() {
-    String releaseDate = widget.item['release_date'] ?? widget.item['first_air_date'] ?? 'Não especificado';
-    return releaseDate.isNotEmpty ? releaseDate.substring(0, 4) : 'Não especificado';
+    String releaseDate = widget.item['release_date'] ??
+        widget.item['first_air_date'] ??
+        'Não especificado';
+    return releaseDate.isNotEmpty
+        ? releaseDate.substring(0, 4)
+        : 'Não especificado';
   }
 
   String _getRating() {
@@ -181,8 +192,8 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getAgeRestriction() {
-    String certification = 'Não especificado'; 
-    List<dynamic>? releaseDates = widget.item['release_dates']?['results']; 
+    String certification = 'Não especificado';
+    List<dynamic>? releaseDates = widget.item['release_dates']?['results'];
 
     if (releaseDates != null) {
       for (var result in releaseDates) {
@@ -203,7 +214,8 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getDuration() {
-    int runtime = widget.item['runtime'] ?? widget.item['episode_run_time']?.first ?? 0;
+    int runtime =
+        widget.item['runtime'] ?? widget.item['episode_run_time']?.first ?? 0;
     int hours = runtime ~/ 60;
     int minutes = runtime % 60;
     String duration = hours > 0 ? '$hours h $minutes min' : '$minutes min';
