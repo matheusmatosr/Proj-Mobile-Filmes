@@ -38,6 +38,7 @@ dependencies:
   provider: ^6.1.2
   firebase_core: any
   firebase_auth: any
+  youtube_player_flutter: ^8.0.0
 
 dev_dependencies:
   flutter_test:
