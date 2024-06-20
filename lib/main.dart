@@ -6,7 +6,9 @@ import 'pages/home_page.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'pages/main_page.dart';
+import 'pages/save_page.dart'; // Importar SavePage
 import 'providers/movie_provider.dart';
+import 'providers/saved_items_provider.dart'; // Importar SavedItemsProvider
 import 'services/tmdb_service.dart';
 
 void main() async {
@@ -44,9 +46,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      // Envolve toda a aplicação com ChangeNotifierProvider
-      create: (_) => MovieProvider(TmdbService()), // Inicializa o MovieProvider
+    return MultiProvider(
+      // Usar MultiProvider para envolver toda a aplicação com múltiplos providers
+      providers: [
+        ChangeNotifierProvider(create: (_) => MovieProvider(TmdbService())), // Inicializa o MovieProvider
+        ChangeNotifierProvider(create: (_) => SavedItemsProvider()), // Inicializa o SavedItemsProvider
+      ],
       child: MaterialApp(
         title: 'CineUCL+',
         theme: ThemeData(
@@ -62,8 +67,8 @@ class _MyAppState extends State<MyApp> {
           '/register': (context) => RegisterPage(onRegister: (username) {
                 Navigator.pop(context);
               }),
-          '/home': (context) =>
-              MainPage(username: username!), // Passa o username para MainPage
+          '/home': (context) => MainPage(username: username!), // Passa o username para MainPage
+          '/saved': (context) => const SavePage(), // Adiciona a rota para SavePage
         },
       ),
     );

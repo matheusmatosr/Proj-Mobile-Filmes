@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/saved_items_provider.dart'; // Provedor que criaremos para gerenciar itens salvos
 
 class DetailsPage extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -10,7 +12,14 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  bool isSaved = false; // Estado para controlar se o item está salvo ou não
+  bool isSaved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final savedItemsProvider = Provider.of<SavedItemsProvider>(context, listen: false);
+    isSaved = savedItemsProvider.isSaved(widget.item);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +48,7 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget _buildPoster(BuildContext context) {
     String posterPath = widget.item['poster_path'];
     return AspectRatio(
-      aspectRatio: 2 / 2.5, // Reduzindo o aspectRatio para diminuir o tamanho
+      aspectRatio: 2 / 2.5,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
         child: Image.network(
@@ -134,6 +143,12 @@ class _DetailsPageState extends State<DetailsPage> {
               setState(() {
                 isSaved = !isSaved;
               });
+              final savedItemsProvider = Provider.of<SavedItemsProvider>(context, listen: false);
+              if (isSaved) {
+                savedItemsProvider.addSavedItem(widget.item);
+              } else {
+                savedItemsProvider.removeSavedItem(widget.item);
+              }
             },
           ),
         ],
@@ -166,10 +181,9 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getAgeRestriction() {
-    String certification = 'Não especificado'; // Inicialmente assume como não especificado
-    List<dynamic>? releaseDates = widget.item['release_dates']?['results']; // Obtém as datas de lançamento
+    String certification = 'Não especificado'; 
+    List<dynamic>? releaseDates = widget.item['release_dates']?['results']; 
 
-    // Busca pela certificação do país "US" (Estados Unidos) se disponível
     if (releaseDates != null) {
       for (var result in releaseDates) {
         if (result['iso_3166_1'] == 'US') {
