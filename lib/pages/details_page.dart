@@ -8,22 +8,24 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(item['title'] ?? item['name'] ?? 'Detalhes'),
+        backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildPoster(context),
-              SizedBox(height: 16),
-              _buildTitle(context),
-              SizedBox(height: 8),
-              _buildDescription(),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildPoster(context),
+            SizedBox(height: 5),
+            _buildTitlesRow(context),
+            SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildDescription(),
+            ),
+          ],
         ),
       ),
     );
@@ -31,24 +33,46 @@ class DetailsPage extends StatelessWidget {
 
   Widget _buildPoster(BuildContext context) {
     String posterPath = item['poster_path'];
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        'https://image.tmdb.org/t/p/w200$posterPath',
-        fit: BoxFit.cover,
-        width: MediaQuery.of(context).size.width,
-        height: 300,
-      ),
+    return Image.network(
+      'https://image.tmdb.org/t/p/w500$posterPath',
+      fit: BoxFit.contain,
+      width: MediaQuery.of(context).size.width,
+      height: 300,
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
-    return Text(
-      item['title'] ?? item['name'] ?? 'Título Desconhecido',
-      style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+  Widget _buildTitlesRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Filmes',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.orange,
+            ),
+          ),
+          SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                item['title'] ?? item['name'] ?? 'Título Desconhecido',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Icon(
+                Icons.bookmark,
+                color: Colors.orange,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
