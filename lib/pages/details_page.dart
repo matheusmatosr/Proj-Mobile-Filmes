@@ -18,13 +18,11 @@ class DetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildPoster(context),
-            SizedBox(height: 5),
-            _buildTitlesRow(context),
             SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildDescription(),
-            ),
+            _buildTitle(context),
+            SizedBox(height: 16),
+            _buildDescription(),
+            SizedBox(height: 16),
           ],
         ),
       ),
@@ -33,42 +31,72 @@ class DetailsPage extends StatelessWidget {
 
   Widget _buildPoster(BuildContext context) {
     String posterPath = item['poster_path'];
-    return Image.network(
-      'https://image.tmdb.org/t/p/w500$posterPath',
-      fit: BoxFit.contain,
-      width: MediaQuery.of(context).size.width,
-      height: 300,
+    return AspectRatio(
+      aspectRatio: 2 / 3,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Image.network(
+          'https://image.tmdb.org/t/p/w500$posterPath',
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
-  Widget _buildTitlesRow(BuildContext context) {
+  Widget _buildTitle(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Filmes',
+            item['media_type'] == 'movie' ? 'Filme' : 'Série de TV',
             style: TextStyle(
               fontSize: 14,
               color: Colors.orange,
             ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 8),
+          Text(
+            item['title'] ?? item['name'] ?? 'Título Desconhecido',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                item['title'] ?? item['name'] ?? 'Título Desconhecido',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              Icon(
-                Icons.bookmark,
-                color: Colors.orange,
+              Row(
+                children: [
+                  Text(
+                    _getReleaseYear(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                        size: 20,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        _getRating(),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -79,12 +107,25 @@ class DetailsPage extends StatelessWidget {
 
   Widget _buildDescription() {
     String overview = item['overview'] ?? 'Descrição não disponível.';
-    return Text(
-      overview,
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        overview,
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+        ),
       ),
     );
+  }
+
+  String _getReleaseYear() {
+    String releaseDate = item['release_date'] ?? item['first_air_date'] ?? 'Não especificado';
+    return releaseDate.isNotEmpty ? releaseDate.substring(0, 4) : 'Não especificado';
+  }
+
+  String _getRating() {
+    double rating = item['vote_average'] ?? 0.0;
+    return rating.toStringAsFixed(1);
   }
 }
