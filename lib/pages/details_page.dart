@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/saved_items_provider.dart'; // Provedor que criaremos para gerenciar itens salvos
+import '../providers/saved_items_provider.dart';
+import '../services/tmdb_service.dart'; // Importe a classe de serviço
 
 class DetailsPage extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -13,6 +14,7 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   bool isSaved = false;
+  Map<String, dynamic>? movieDetails;
 
   @override
   void initState() {
@@ -20,6 +22,15 @@ class _DetailsPageState extends State<DetailsPage> {
     final savedItemsProvider =
         Provider.of<SavedItemsProvider>(context, listen: false);
     isSaved = savedItemsProvider.isSaved(widget.item);
+    _fetchMovieDetails();
+  }
+
+  Future<void> _fetchMovieDetails() async {
+    final tmdbService = TmdbService();
+    final details = await tmdbService.getMovieDetails(widget.item['id']);
+    setState(() {
+      movieDetails = details;
+    });
   }
 
   @override
@@ -30,19 +41,21 @@ class _DetailsPageState extends State<DetailsPage> {
         title: Text(widget.item['title'] ?? widget.item['name'] ?? 'Detalhes'),
         backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPoster(context),
-            SizedBox(height: 16),
-            _buildTitle(context),
-            SizedBox(height: 16),
-            _buildDescription(),
-            SizedBox(height: 16),
-          ],
-        ),
-      ),
+      body: movieDetails == null
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPoster(context),
+                  SizedBox(height: 16),
+                  _buildTitle(context),
+                  SizedBox(height: 16),
+                  _buildDescription(),
+                  SizedBox(height: 16),
+                ],
+              ),
+            ),
     );
   }
 
@@ -164,7 +177,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildDescription() {
-    String overview = widget.item['overview'] ?? 'Descrição não disponível.';
+    String overview = movieDetails?['overview'] ?? 'Descrição não disponível.';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Text(
@@ -178,8 +191,8 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getReleaseYear() {
-    String releaseDate = widget.item['release_date'] ??
-        widget.item['first_air_date'] ??
+    String releaseDate = movieDetails?['release_date'] ??
+        movieDetails?['first_air_date'] ??
         'Não especificado';
     return releaseDate.isNotEmpty
         ? releaseDate.substring(0, 4)
@@ -187,21 +200,21 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getRating() {
-    double rating = widget.item['vote_average'] ?? 0.0;
+    double rating = movieDetails?['vote_average'] ?? 0.0;
     return rating.toStringAsFixed(1);
   }
 
   String _getAgeRestriction() {
     String certification = 'Não especificado';
-    List<dynamic>? releaseDates = widget.item['release_dates']?['results'];
+    List<dynamic>? releaseDates = movieDetails?['release_dates']?['results'];
 
     if (releaseDates != null) {
       for (var result in releaseDates) {
-        if (result['iso_3166_1'] == 'US') {
+        if (result['iso_3166_1'] == 'BR') {
           var certifications = result['release_dates'];
           for (var cert in certifications) {
-            if (cert['type'] == 3) {
-              certification = cert['certification'] ?? 'Não especificado';
+            if (cert['certification'] != null && cert['certification'].isNotEmpty) {
+              certification = cert['certification'];
               break;
             }
           }
@@ -214,8 +227,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getDuration() {
-    int runtime =
-        widget.item['runtime'] ?? widget.item['episode_run_time']?.first ?? 0;
+    int runtime = movieDetails?['runtime'] ?? 0;
     int hours = runtime ~/ 60;
     int minutes = runtime % 60;
     String duration = hours > 0 ? '$hours h $minutes min' : '$minutes min';
