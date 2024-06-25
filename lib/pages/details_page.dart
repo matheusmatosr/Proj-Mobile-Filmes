@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/saved_items_provider.dart'; // Provedor que criaremos para gerenciar itens salvos
+import '../providers/saved_items_provider.dart'; 
+import '../services/tmdb_service.dart';  // Supondo que você tenha um serviço TMDB para buscar os detalhes completos
 
 class DetailsPage extends StatefulWidget {
   final Map<String, dynamic> item;
@@ -13,13 +14,27 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   bool isSaved = false;
+  Map<String, dynamic>? detailedItem;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    final savedItemsProvider =
-        Provider.of<SavedItemsProvider>(context, listen: false);
+    _fetchDetailedInfo();
+  }
+
+  Future<void> _fetchDetailedInfo() async {
+    final tmdbService = TmdbService(); 
+    final savedItemsProvider = Provider.of<SavedItemsProvider>(context, listen: false);
     isSaved = savedItemsProvider.isSaved(widget.item);
+
+    final movieId = widget.item['id'];
+    final mediaType = widget.item['media_type'];  // 'movie' ou 'tv'
+    final details = await tmdbService.fetchDetails(movieId, mediaType);
+    setState(() {
+      detailedItem = details;
+      isLoading = false;
+    });
   }
 
   @override
@@ -29,28 +44,53 @@ class _DetailsPageState extends State<DetailsPage> {
       appBar: AppBar(
         title: Text(widget.item['title'] ?? widget.item['name'] ?? 'Detalhes'),
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: Icon(
+              isSaved ? Icons.bookmark : Icons.bookmark_border,
+              color: isSaved ? Colors.red : Colors.red.withOpacity(0.5),
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                isSaved = !isSaved;
+              });
+              final savedItemsProvider = Provider.of<SavedItemsProvider>(context, listen: false);
+              if (isSaved) {
+                savedItemsProvider.addSavedItem(widget.item);
+              } else {
+                savedItemsProvider.removeSavedItem(widget.item);
+              }
+            },
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPoster(context),
-            SizedBox(height: 16),
-            _buildTitle(context),
-            SizedBox(height: 16),
-            _buildDescription(),
-            SizedBox(height: 16),
-          ],
+      body: isLoading 
+        ? Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildPoster(),
+              SizedBox(height: 16),
+              _buildTitle(),
+              SizedBox(height: 16),
+              _buildDescription(),
+              SizedBox(height: 16),
+              _buildCast(),
+              SizedBox(height: 16),
+              _buildReviews(),
+            ],
+          ),
         ),
-      ),
     );
   }
 
-  Widget _buildPoster(BuildContext context) {
-    String posterPath = widget.item['poster_path'];
+  Widget _buildPoster() {
+    String posterPath = detailedItem?['poster_path'] ?? '';
     return Center(
       child: SizedBox(
-        width: 200,
+        width: double.infinity,
         height: 300,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
@@ -63,7 +103,7 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
+  Widget _buildTitle() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -73,7 +113,7 @@ class _DetailsPageState extends State<DetailsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.item['media_type'] == 'movie' ? 'Filme' : 'Série de TV',
+                detailedItem?['media_type'] == 'movie' ? 'Filme' : 'Série de TV',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.orange,
@@ -81,9 +121,7 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
               SizedBox(height: 8),
               Text(
-                widget.item['title'] ??
-                    widget.item['name'] ??
-                    'Título Desconhecido',
+                detailedItem?['title'] ?? detailedItem?['name'] ?? 'Título Desconhecido',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -92,7 +130,6 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
               SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     _getReleaseYear(),
@@ -102,61 +139,38 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 20,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        _getRating(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        _getAgeRestriction(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        _getDuration(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+                  Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: 20,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    _getRating(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    _getAgeRestriction(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    _getDuration(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
             ],
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.bookmark,
-              color: isSaved ? Colors.red : Colors.red.withOpacity(0.5),
-              size: 30,
-            ),
-            onPressed: () {
-              setState(() {
-                isSaved = !isSaved;
-              });
-              final savedItemsProvider =
-                  Provider.of<SavedItemsProvider>(context, listen: false);
-              if (isSaved) {
-                savedItemsProvider.addSavedItem(widget.item);
-              } else {
-                savedItemsProvider.removeSavedItem(widget.item);
-              }
-            },
           ),
         ],
       ),
@@ -164,7 +178,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildDescription() {
-    String overview = widget.item['overview'] ?? 'Descrição não disponível.';
+    String overview = detailedItem?['overview'] ?? 'Descrição não disponível.';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Text(
@@ -177,9 +191,149 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
+  Widget _buildCast() {
+    List<dynamic> cast = detailedItem?['credits']['cast'] ?? [];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Elenco',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: cast.map((actor) {
+                return Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: Column(
+                    children: [
+                      ClipOval(
+                        child: Image.network(
+                          'https://image.tmdb.org/t/p/w500${actor['profile_path']}',
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        actor['name'],
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReviews() {
+    List<dynamic> reviews = detailedItem?['reviews']['results'] ?? [];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Avaliações e críticas',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(
+                Icons.star,
+                color: Colors.yellow,
+                size: 24,
+              ),
+              SizedBox(width: 8),
+              Text(
+                _getRating(),
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                '(${reviews.length} Reviews)',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Column(
+            children: reviews.map((review) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 16,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          review['rating'].toString(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      review['content'],
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      review['author'],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
   String _getReleaseYear() {
-    String releaseDate = widget.item['release_date'] ??
-        widget.item['first_air_date'] ??
+    String releaseDate = detailedItem?['release_date'] ??
+        detailedItem?['first_air_date'] ??
         'Não especificado';
     return releaseDate.isNotEmpty
         ? releaseDate.substring(0, 4)
@@ -187,38 +341,25 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   String _getRating() {
-    double rating = widget.item['vote_average'] ?? 0.0;
+    double rating = detailedItem?['vote_average']?.toDouble() ?? 0.0;
     return rating.toStringAsFixed(1);
   }
 
   String _getAgeRestriction() {
-    String certification = 'Não especificado';
-    List<dynamic>? releaseDates = widget.item['release_dates']?['results'];
-
-    if (releaseDates != null) {
-      for (var result in releaseDates) {
-        if (result['iso_3166_1'] == 'US') {
-          var certifications = result['release_dates'];
-          for (var cert in certifications) {
-            if (cert['type'] == 3) {
-              certification = cert['certification'] ?? 'Não especificado';
-              break;
-            }
-          }
-          break;
-        }
-      }
-    }
-
-    return '($certification)';
+    return detailedItem?['adult'] == true ? '18+' : 'Livre';
   }
 
   String _getDuration() {
-    int runtime =
-        widget.item['runtime'] ?? widget.item['episode_run_time']?.first ?? 0;
-    int hours = runtime ~/ 60;
-    int minutes = runtime % 60;
-    String duration = hours > 0 ? '$hours h $minutes min' : '$minutes min';
-    return duration;
+    if (detailedItem?['media_type'] == 'movie') {
+      int runtime = detailedItem?['runtime'] ?? 0;
+      int hours = runtime ~/ 60;
+      int minutes = runtime % 60;
+      return hours > 0
+          ? '${hours}h ${minutes}m'
+          : '${minutes}m';
+    } else {
+      int numberOfSeasons = detailedItem?['number_of_seasons'] ?? 0;
+      return '${numberOfSeasons} Temporada${numberOfSeasons > 1 ? 's' : ''}';
+    }
   }
 }
