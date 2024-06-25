@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart'; // Importe o pacote url_launcher
 import '../providers/saved_items_provider.dart';
 import '../services/tmdb_service.dart'; // Importe a classe de serviço
 
@@ -15,6 +16,8 @@ class DetailsPage extends StatefulWidget {
 class _DetailsPageState extends State<DetailsPage> {
   bool isSaved = false;
   Map<String, dynamic>? movieDetails;
+  String? trailerUrl;
+  List<dynamic>? cast;
 
   @override
   void initState() {
@@ -26,12 +29,20 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Future<void> _fetchMovieDetails() async {
-    final tmdbService = TmdbService();
-    final details = await tmdbService.getMovieDetails(widget.item['id']);
-    setState(() {
-      movieDetails = details;
-    });
-  }
+  final tmdbService = TmdbService();
+  final int movieId = int.parse(widget.item['id'].toString());
+
+  final details = await tmdbService.getMovieDetails(movieId);
+  final trailer = await tmdbService.getMovieTrailer(movieId);
+  final credits = await tmdbService.getMovieCredits(movieId);
+
+  setState(() {
+    movieDetails = details;
+    trailerUrl = trailer;
+    cast = credits['cast'] != null ? List<dynamic>.from(credits['cast']) : [];
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +64,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   SizedBox(height: 16),
                   _buildDescription(),
                   SizedBox(height: 16),
+                  _buildAdditionalDetails(),
                 ],
               ),
             ),
@@ -188,6 +200,205 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildAdditionalDetails() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle('Classificação Geral:'),
+        _buildRating(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Autores e Direção:'),
+        _buildAuthorsAndDirectors(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Título Original:'),
+        _buildOriginalTitle(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Estado:'),
+        _buildStatus(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Idioma:'),
+        _buildLanguage(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Orçamento:'),
+        _buildBudget(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Bilheteira:'),
+        _buildRevenue(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Elenco:'),
+        _buildCast(),
+        SizedBox(height: 16),
+        _buildSectionTitle('Trailer:'),
+        _buildTrailerButton(),
+      ],
+    ),
+  );
+}
+
+  Widget _buildSectionTitle(String title) {
+  return Text(
+    title,
+    style: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+  );
+}
+  Widget _buildRating() {
+  double rating = movieDetails?['vote_average'] ?? 0.0;
+  int voteCount = movieDetails?['vote_count'] ?? 0;
+  return Text(
+    '$rating/10 ($voteCount votos)',
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  );
+}
+
+  Widget _buildAuthorsAndDirectors() {
+  if (movieDetails != null) {
+    List<dynamic> directors = movieDetails!['credits']['crew']
+        .where((crewMember) => crewMember['job'] == 'Director')
+        .toList();
+    List<dynamic> authors = movieDetails!['credits']['crew']
+        .where((crewMember) => crewMember['department'] == 'Writing')
+        .toList();
+
+    String directorsString =
+        directors.map((director) => director['name']).join(', ');
+    String authorsString =
+        authors.map((author) => author['name']).join(', ');
+
+    return Text(
+      'Diretor(es): $directorsString\nAutor(es): $authorsString',
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+    );
+  } else {
+    return Text(
+      'Não disponível',
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+
+  Widget _buildOriginalTitle() {
+  String originalTitle = movieDetails?['original_title'] ?? 'Não especificado';
+  return Text(
+    originalTitle,
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  );
+}
+
+  Widget _buildStatus() {
+  String status = movieDetails?['status'] ?? 'Não especificado';
+  return Text(
+    status,
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  );
+}
+
+Widget _buildLanguage() {
+  String language = movieDetails?['original_language'] ?? 'Não especificado';
+  return Text(
+    language,
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  );
+}
+
+  Widget _buildBudget() {
+  int budget = movieDetails?['budget'] ?? 0;
+  return Text(
+    '\$${budget.toStringAsFixed(2)}',
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  );
+}
+
+Widget _buildRevenue() {
+  int revenue = movieDetails?['revenue'] ?? 0;
+  return Text(
+    '\$${revenue.toStringAsFixed(2)}',
+    style: TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+  );
+}
+
+  Widget _buildCast() {
+  if (cast != null && cast!.isNotEmpty) {
+    String castList =
+        cast!.map((actor) => actor['name']).take(5).join(', ');
+    return Text(
+      castList,
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+    );
+  } else {
+    return Text(
+      'Não disponível',
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+  Widget _buildTrailerButton() {
+  return ElevatedButton(
+    onPressed: () {
+      if (trailerUrl != null && trailerUrl!.isNotEmpty) {
+        _launchURL(trailerUrl!);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Trailer não disponível'),
+          ),
+        );
+      }
+    },
+    child: Text(
+      'Assistir Trailer',
+      style: TextStyle(
+        fontSize: 16,
+      ),
+    ),
+  );
+}
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   String _getReleaseYear() {

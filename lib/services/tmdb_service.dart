@@ -86,11 +86,36 @@ class TmdbService {
   }
 
    Future<Map<String, dynamic>> getMovieDetails(int movieId) async {
-    final response = await http.get(Uri.parse('$_baseUrl/movie/$movieId?api_key=$_apiKey&language=pt-BR&append_to_response=release_dates'));
+  final response = await http.get(Uri.parse('$_baseUrl/movie/$movieId?api_key=$_apiKey&language=pt-BR&append_to_response=release_dates,credits'));
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load movie details');
+  }
+}
+
+
+  Future<String?> getMovieTrailer(int movieId) async {
+    final response = await http.get(Uri.parse('$_baseUrl/movie/$movieId/videos?api_key=$_apiKey&language=pt-BR'));
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      final data = json.decode(response.body);
+      if (data['results'].isNotEmpty) {
+        return 'https://www.youtube.com/watch?v=${data['results'][0]['key']}';
+      } else {
+        return null;
+      }
     } else {
-      throw Exception('Failed to load movie details');
+      throw Exception('Failed to load movie trailer');
+    }
+  }
+
+  Future<Map<String, dynamic>> getMovieCredits(int movieId) async {
+    final response = await http.get(Uri.parse('$_baseUrl/movie/$movieId/credits?api_key=$_apiKey&language=pt-BR'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data; // return the full data map
+    } else {
+      throw Exception('Failed to load movie credits');
     }
   }
 
