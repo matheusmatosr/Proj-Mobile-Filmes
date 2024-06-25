@@ -85,15 +85,4 @@ class TmdbService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchDetails(int id, String mediaType) async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/$mediaType/$id?api_key=$_apiKey&language=pt-BR&append_to_response=credits,reviews'),
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load details');
-    }
-  }
 }
