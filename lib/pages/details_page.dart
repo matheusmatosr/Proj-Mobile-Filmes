@@ -223,46 +223,61 @@ class _DetailsPageState extends State<DetailsPage> {
 
   Widget _buildCast() {
   if (cast != null && cast!.isNotEmpty) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: cast!.map<Widget>((actor) {
-          String? profilePath = actor['profile_path'] as String?;
-          String name = actor['name'] ?? 'Nome não disponível';
-          String character = actor['character'] ?? 'Personagem não disponível';
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: profilePath != null
-                      ? NetworkImage(
-                          'https://image.tmdb.org/t/p/w200$profilePath',
-                        )
-                      : AssetImage('assets/images/default_profile_image.png') as ImageProvider,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16),
+        Text(
+          ' Elenco ',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: cast!.map<Widget>((actor) {
+              String? profilePath = actor['profile_path'] as String?;
+              String name = actor['name'] ?? 'Nome não disponível';
+              String character = actor['character'] ?? 'Personagem não disponível';
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: profilePath != null
+                          ? NetworkImage(
+                              'https://image.tmdb.org/t/p/w200$profilePath',
+                            )
+                          : AssetImage('assets/images/default_profile_image.png') as ImageProvider,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      character,
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 8),
-                Text(
-                  name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  character,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   } else {
     return Text(
@@ -274,6 +289,7 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 }
+
 
 
 
