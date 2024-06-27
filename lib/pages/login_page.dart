@@ -16,14 +16,18 @@ class LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      if (!mounted) return;
-      widget.onLogin(_emailController.text);
-      Navigator.pushNamed(
-          context, '/home'); // Assuming '/home' is the home screen route
+      final User? user = userCredential.user;
+      if (user != null) {
+        final String username = user.email!.split('@')[0];
+        if (!mounted) return;
+        widget.onLogin(username);
+        Navigator.pushNamed(context, '/home');
+      }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Falha ao entrar: ${e.message}')),

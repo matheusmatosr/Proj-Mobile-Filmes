@@ -47,14 +47,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      // Usar MultiProvider para envolver toda a aplicação com múltiplos providers
       providers: [
-        ChangeNotifierProvider(
-            create: (_) =>
-                MovieProvider(TmdbService())), // Inicializa o MovieProvider
-        ChangeNotifierProvider(
-            create: (_) =>
-                SavedItemsProvider()), // Inicializa o SavedItemsProvider
+        ChangeNotifierProvider(create: (_) => MovieProvider(TmdbService())),
+        ChangeNotifierProvider(create: (_) => SavedItemsProvider()),
       ],
       child: MaterialApp(
         title: 'CineUCL+',
@@ -69,12 +64,11 @@ class _MyAppState extends State<MyApp> {
                 Navigator.pushReplacementNamed(context, '/home');
               }),
           '/register': (context) => RegisterPage(onRegister: (username) {
+                login(username);
                 Navigator.pop(context);
               }),
-          '/home': (context) =>
-              MainPage(username: username!), // Passa o username para MainPage
-          '/saved': (context) =>
-              const SavePage(), // Adiciona a rota para SavePage
+          '/home': (context) => MainPage(username: username!),
+          '/saved': (context) => const SavePage(),
         },
       ),
     );

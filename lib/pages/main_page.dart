@@ -214,7 +214,7 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 290, // Ajusta a altura dos cards
+          height: 290,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
@@ -231,7 +231,7 @@ class MainPage extends StatelessWidget {
                   title: movie['title'],
                   posterUrl: posterUrl,
                   releaseDate: releaseDate,
-                  item: movie, // Passa o item para MovieCard
+                  item: movie,
                 ),
               );
             },
@@ -257,7 +257,7 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 290, // Ajusta a altura dos cards
+          height: 290,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: series.length,
@@ -274,7 +274,7 @@ class MainPage extends StatelessWidget {
                   title: serie['name'],
                   posterUrl: posterUrl,
                   releaseDate: releaseDate,
-                  item: serie, // Passa o item para MovieCard
+                  item: serie,
                 ),
               );
             },
