@@ -222,26 +222,60 @@ class _DetailsPageState extends State<DetailsPage> {
 
 
   Widget _buildCast() {
-    if (cast != null && cast!.isNotEmpty) {
-      String castList =
-          cast!.map((actor) => actor['name']).take(5).join(', ');
-      return Text(
-        'Elenco: $castList',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.white,
-        ),
-      );
-    } else {
-      return Text(
-        'Elenco não disponível',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.white,
-        ),
-      );
-    }
+  if (cast != null && cast!.isNotEmpty) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: cast!.map<Widget>((actor) {
+          String? profilePath = actor['profile_path'] as String?;
+          String name = actor['name'] ?? 'Nome não disponível';
+          String character = actor['character'] ?? 'Personagem não disponível';
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: profilePath != null
+                      ? NetworkImage(
+                          'https://image.tmdb.org/t/p/w200$profilePath',
+                        )
+                      : AssetImage('assets/images/default_profile_image.png') as ImageProvider,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  character,
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  } else {
+    return Text(
+      'Elenco não disponível',
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+      ),
+    );
   }
+}
+
+
 
   Widget _buildLanguageAndAuthors() {
     String language =
