@@ -191,26 +191,35 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildTrailerButton() {
-    return ElevatedButton(
-      onPressed: () {
-        if (trailerUrl != null && trailerUrl!.isNotEmpty) {
-          _launchURL(trailerUrl!);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Trailer não disponível'),
-            ),
-          );
-        }
-      },
+  return ElevatedButton(
+    onPressed: () {
+      if (trailerUrl != null && trailerUrl!.isNotEmpty) {
+        _launchURL(trailerUrl!);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Trailer não disponível'),
+          ),
+        );
+      }
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.red, 
+      minimumSize: Size(double.infinity, 48), 
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0), // Espaçamento interno
       child: Text(
         'Assistir Trailer',
         style: TextStyle(
           fontSize: 16,
+          color: Colors.white,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildCast() {
     if (cast != null && cast!.isNotEmpty) {
