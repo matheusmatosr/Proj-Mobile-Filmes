@@ -1,6 +1,6 @@
 {
-    "name": "appcontador",
-    "short_name": "appcontador",
+    "name": "CineUCL+",
+    "short_name": "CineUCL+",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
