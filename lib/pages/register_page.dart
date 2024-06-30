@@ -1,6 +1,5 @@
 import 'package:appcontador/services/autenticacao_servico.dart';
 import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function(String) onRegister;
@@ -158,9 +157,12 @@ class RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    print(nome);
-    print(email);
-    print(senha);
+    if (senha.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('A senha deve ter pelo menos 6 dígitos')),
+      );
+      return;
+    }
 
     if (_termsAccepted) {
       try {
