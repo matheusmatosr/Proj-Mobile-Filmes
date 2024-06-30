@@ -52,6 +52,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SavedItemsProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'CineUCL+',
         theme: ThemeData(
           primarySwatch: Colors.blue,
