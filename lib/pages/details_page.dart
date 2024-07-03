@@ -43,6 +43,20 @@ class _DetailsPageState extends State<DetailsPage> {
     });
   }
 
+  void _toggleSavedStatus() {
+    final savedItemsProvider =
+        Provider.of<SavedItemsProvider>(context, listen: false);
+
+    setState(() {
+      isSaved = !isSaved;
+      if (isSaved) {
+        savedItemsProvider.addSavedItem(widget.item);
+      } else {
+        savedItemsProvider.removeSavedItem(widget.item);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +64,15 @@ class _DetailsPageState extends State<DetailsPage> {
       appBar: AppBar(
         title: Text(widget.item['title'] ?? widget.item['name'] ?? 'Detalhes'),
         backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: Icon(
+              isSaved ? Icons.bookmark : Icons.bookmark_border,
+              color: Colors.red,
+            ),
+            onPressed: _toggleSavedStatus,
+          ),
+        ],
       ),
       body: movieDetails == null
           ? Center(child: CircularProgressIndicator())
@@ -191,107 +214,103 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildTrailerButton() {
-  return ElevatedButton(
-    onPressed: () {
-      if (trailerUrl != null && trailerUrl!.isNotEmpty) {
-        _launchURL(trailerUrl!);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Trailer não disponível'),
+    return ElevatedButton(
+      onPressed: () {
+        if (trailerUrl != null && trailerUrl!.isNotEmpty) {
+          _launchURL(trailerUrl!);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Trailer não disponível'),
+            ),
+          );
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        minimumSize: Size(double.infinity, 48),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0), // Espaçamento interno
+        child: Text(
+          'Assistir Trailer',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white,
           ),
-        );
-      }
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.red, 
-      minimumSize: Size(double.infinity, 48), 
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0), // Espaçamento interno
-      child: Text(
-        'Assistir Trailer',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCast() {
+    if (cast != null && cast!.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 16),
+          Text(
+            ' Elenco ',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: cast!.map<Widget>((actor) {
+                String? profilePath = actor['profile_path'] as String?;
+                String name = actor['name'] ?? 'Nome não disponível';
+                String character = actor['character'] ?? 'Personagem não disponível';
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: profilePath != null
+                            ? NetworkImage(
+                                'https://image.tmdb.org/t/p/w200$profilePath',
+                              )
+                            : AssetImage('assets/images/default_profile_image.png') as ImageProvider,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        character,
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Text(
+        'Elenco não disponível',
         style: TextStyle(
           fontSize: 16,
           color: Colors.white,
         ),
-      ),
-    ),
-  );
-}
-
-
-  Widget _buildCast() {
-  if (cast != null && cast!.isNotEmpty) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 16),
-        Text(
-          ' Elenco ',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: cast!.map<Widget>((actor) {
-              String? profilePath = actor['profile_path'] as String?;
-              String name = actor['name'] ?? 'Nome não disponível';
-              String character = actor['character'] ?? 'Personagem não disponível';
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: profilePath != null
-                          ? NetworkImage(
-                              'https://image.tmdb.org/t/p/w200$profilePath',
-                            )
-                          : AssetImage('assets/images/default_profile_image.png') as ImageProvider,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      character,
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
-  } else {
-    return Text(
-      'Elenco não disponível',
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      ),
-    );
+      );
+    }
   }
-}
-
-
-
 
   Widget _buildLanguageAndAuthors() {
     String language =
@@ -327,10 +346,10 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget _buildOriginalTitleBudgetRevenue() {
     String originalTitle = movieDetails?['original_title'] ?? 'Não especificado';
     String budget = movieDetails?['budget'] != null
-        ? '\$${movieDetails!['budget'].toString()}'
+        ? '\$${movieDetails!['budget']}'
         : 'Não especificado';
     String revenue = movieDetails?['revenue'] != null
-        ? '\$${movieDetails!['revenue'].toString()}'
+        ? '\$${movieDetails!['revenue']}'
         : 'Não especificado';
 
     return Row(
@@ -347,25 +366,12 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
         SizedBox(width: 16),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Orçamento: $budget',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Bilheteria: $revenue',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          child: Text(
+            'Orçamento: $budget\nReceita: $revenue',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+            ),
           ),
         ),
       ],
@@ -373,10 +379,10 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildRating() {
-    double rating = movieDetails?['vote_average'] ?? 0.0;
-    int voteCount = movieDetails?['vote_count'] ?? 0;
+    String rating = _getRating();
+
     return Text(
-      'Classificação Geral: $rating/10 ($voteCount votos)',
+      'Avaliação: $rating',
       style: TextStyle(
         fontSize: 16,
         color: Colors.white,
@@ -384,74 +390,56 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
-  String _getReleaseYear() {
-    String releaseDate = movieDetails?['release_date'] ??
-        movieDetails?['first_air_date'] ??
-        'Não especificado';
-    return releaseDate.isNotEmpty
-        ? releaseDate.substring(0, 4)
-        : 'Não especificado';
-  }
-
-  String _getRating() {
-    double rating = movieDetails?['vote_average'] ?? 0.0;
-    return rating.toStringAsFixed(1);
-  }
-
-  String _getAgeRestriction() {
-    String certification = 'Não especificado';
-    List<dynamic>? releaseDates = movieDetails?['release_dates']?['results'];
-
-    if (releaseDates != null) {
-      for (var result in releaseDates) {
-        if (result['iso_3166_1'] == 'BR') {
-          var certifications = result['release_dates'];
-          for (var cert in certifications) {
-            if (cert['certification'] != null &&
-                cert['certification'].isNotEmpty) {
-              certification = cert['certification'];
-              break;
-            }
-          }
-          break;
-        }
-      }
-    }
-
-    return '($certification)';
-  }
-
-  String _getDuration() {
-    int runtime = movieDetails?['runtime'] ?? 0;
-    int minutes = runtime % 60;
-    int hours = (runtime / 60).floor();
-    return '${hours}h${minutes}min';
-  }
-
-  String _getStatus() {
-    String status = movieDetails?['status'] ?? 'Desconhecido';
-    return status.isNotEmpty ? status : 'Desconhecido';
-  }
-
-  String _getAuthors() {
-    List<dynamic>? crew = cast != null
-        ? cast!.where((member) => member['known_for_department'] == 'Directing' || member['known_for_department'] == 'Writing').toList()
-        : [];
-
-    if (crew.isNotEmpty) {
-      String authorsList = crew.map((author) => author['name']).take(5).join(', ');
-      return authorsList;
-    } else {
-      return 'Não especificado';
-    }
-  }
-
-  Future<void> _launchURL(String url) async {
+  void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      throw 'Não foi possível abrir o link $url';
+    }
+  }
+
+  String _getReleaseYear() {
+    String releaseDate = widget.item['release_date'] ?? '';
+    if (releaseDate.isNotEmpty) {
+      return releaseDate.split('-')[0];
+    } else {
+      return 'Ano não disponível';
+    }
+  }
+
+  String _getRating() {
+    return widget.item['vote_average']?.toString() ?? 'N/A';
+  }
+
+  String _getAgeRestriction() {
+    return movieDetails?['age_restriction'] ?? 'N/A';
+  }
+
+  String _getDuration() {
+    int? runtime = movieDetails?['runtime'];
+    if (runtime != null) {
+      int hours = runtime ~/ 60;
+      int minutes = runtime % 60;
+      return '${hours}h ${minutes}m';
+    } else {
+      return 'Duração não disponível';
+    }
+  }
+
+  String _getStatus() {
+    return movieDetails?['status'] ?? 'Status não disponível';
+  }
+
+  String _getAuthors() {
+    List<dynamic>? crew = movieDetails?['credits']['crew'];
+    if (crew != null && crew.isNotEmpty) {
+      List<String> directors = crew
+          .where((member) => member['job'] == 'Director')
+          .map((member) => member['name'] as String)
+          .toList();
+      return directors.join(', ');
+    } else {
+      return 'Não disponível';
     }
   }
 }
-
