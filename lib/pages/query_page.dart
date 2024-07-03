@@ -8,6 +8,8 @@ class QueryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -56,11 +58,10 @@ class QueryPage extends StatelessWidget {
                 return Expanded(
                   child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent:
-                          250, // Ajusta a largura máxima do card
+                      maxCrossAxisExtent: 250,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 20, // Aumenta o espaço entre as linhas
-                      childAspectRatio: 0.7, // Ajusta a proporção do card
+                      mainAxisSpacing: 20,
+                      childAspectRatio: isMobile ? 0.6 : 0.7,
                     ),
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {

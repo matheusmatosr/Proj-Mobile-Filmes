@@ -8,6 +8,8 @@ class SavePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -35,7 +37,8 @@ class SavePage extends StatelessWidget {
                 maxCrossAxisExtent: 250,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 20,
-                childAspectRatio: 0.7,
+                childAspectRatio:
+                    isMobile ? 0.6 : 0.7, // Ajusta a proporção do card
               ),
               itemCount: savedItems.length,
               itemBuilder: (context, index) {
@@ -43,8 +46,10 @@ class SavePage extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: MovieCard(
-                    title: item['title'] ?? item['name'] ?? 'Título Desconhecido',
-                    posterUrl: 'https://image.tmdb.org/t/p/w200${item['poster_path']}',
+                    title:
+                        item['title'] ?? item['name'] ?? 'Título Desconhecido',
+                    posterUrl:
+                        'https://image.tmdb.org/t/p/w200${item['poster_path']}',
                     releaseDate: item['release_date'] != null
                         ? item['release_date'].split('-')[0]
                         : item['first_air_date'] != null

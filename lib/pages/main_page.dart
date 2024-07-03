@@ -216,7 +216,7 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 300,
+          height: 350,
           child: ListView.builder(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),
@@ -261,7 +261,7 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 300,
+          height: 310,
           child: ListView.builder(
             shrinkWrap: true,
             physics: ClampingScrollPhysics(),

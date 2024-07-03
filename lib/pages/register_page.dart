@@ -56,7 +56,7 @@ class RegisterPageState extends State<RegisterPage> {
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(
@@ -109,7 +109,7 @@ class RegisterPageState extends State<RegisterPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 registrar();
