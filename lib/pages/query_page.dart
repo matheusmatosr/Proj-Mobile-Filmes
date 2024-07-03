@@ -39,27 +39,28 @@ class QueryPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            Expanded(
-              child: Consumer<MovieProvider>(
-                builder: (context, movieProvider, child) {
-                  if (movieProvider.isLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  final searchResults = movieProvider.searchResults;
-                  if (searchResults.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Nenhum resultado encontrado.',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }
-                  return GridView.builder(
+            Consumer<MovieProvider>(
+              builder: (context, movieProvider, child) {
+                if (movieProvider.isLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final searchResults = movieProvider.searchResults;
+                if (searchResults.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'Nenhum resultado encontrado.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 250,
+                      maxCrossAxisExtent:
+                          250, // Ajusta a largura máxima do card
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: _calculateAspectRatio(context),
+                      mainAxisSpacing: 20, // Aumenta o espaço entre as linhas
+                      childAspectRatio: 0.7, // Ajusta a proporção do card
                     ),
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {
@@ -72,38 +73,22 @@ class QueryPage extends StatelessWidget {
                               'Título Desconhecido',
                           posterUrl:
                               'https://image.tmdb.org/t/p/w200${item['poster_path']}',
-                          releaseDate: _getReleaseDate(item),
+                          releaseDate: item['release_date'] != null
+                              ? item['release_date'].split('-')[0]
+                              : item['first_air_date'] != null
+                                  ? item['first_air_date'].split('-')[0]
+                                  : 'Desconhecido',
                           item: item,
                         ),
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
-  }
-
-  double _calculateAspectRatio(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    // Calcula o número de colunas com base no tamanho da tela
-    if (screenWidth < 600) {
-      return 0.8; // Para telas menores, aumenta a proporção do card
-    } else {
-      return 0.7; // Para telas maiores, mantém a proporção padrão
-    }
-  }
-
-  String _getReleaseDate(Map<String, dynamic> item) {
-    if (item['release_date'] != null) {
-      return item['release_date'].split('-')[0];
-    } else if (item['first_air_date'] != null) {
-      return item['first_air_date'].split('-')[0];
-    } else {
-      return 'Desconhecido';
-    }
   }
 }
