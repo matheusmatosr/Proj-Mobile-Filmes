@@ -119,38 +119,40 @@ class MainPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Expanded(
-                child: ListView(
-                  physics: BouncingScrollPhysics(),
-                  children: [
-                    _buildSectionTitle('Filmes Populares'),
-                    SizedBox(height: 10),
-                    _buildMovieList(context, 'popularMovies', 'movie'),
-                    SizedBox(height: 30),
-                    _buildSectionTitle('Filmes em destaque'),
-                    SizedBox(height: 10),
-                    _buildMovieList(context, 'featuredMovies', 'movie'),
-                    SizedBox(height: 30),
-                    _buildSectionTitle('Mais bem avaliados'),
-                    SizedBox(height: 10),
-                    _buildMovieList(context, 'topRatedMovies', 'movie'),
-                    SizedBox(height: 30),
-                    _buildSectionTitle('Lançamentos'),
-                    SizedBox(height: 10),
-                    _buildMovieList(context, 'upcomingMovies', 'movie'),
-                    SizedBox(height: 30),
-                    _buildSectionTitle('Séries de TV Populares'),
-                    SizedBox(height: 10),
-                    _buildSeriesList(context, 'popularSeries', 'tv'),
-                    SizedBox(height: 30),
-                    _buildSectionTitle('Séries de TV Mais Bem Avaliadas'),
-                    SizedBox(height: 10),
-                    _buildSeriesList(context, 'topRatedSeries', 'tv'),
-                    SizedBox(height: 30),
-                    _buildSectionTitle('Séries de TV no Ar Atualmente'),
-                    SizedBox(height: 10),
-                    _buildSeriesList(context, 'onAirSeries', 'tv'),
-                    SizedBox(height: 30),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('Filmes Populares'),
+                      SizedBox(height: 10),
+                      _buildMovieList(context, 'popularMovies', 'movie'),
+                      SizedBox(height: 30),
+                      _buildSectionTitle('Filmes em destaque'),
+                      SizedBox(height: 10),
+                      _buildMovieList(context, 'featuredMovies', 'movie'),
+                      SizedBox(height: 30),
+                      _buildSectionTitle('Mais bem avaliados'),
+                      SizedBox(height: 10),
+                      _buildMovieList(context, 'topRatedMovies', 'movie'),
+                      SizedBox(height: 30),
+                      _buildSectionTitle('Lançamentos'),
+                      SizedBox(height: 10),
+                      _buildMovieList(context, 'upcomingMovies', 'movie'),
+                      SizedBox(height: 30),
+                      _buildSectionTitle('Séries de TV Populares'),
+                      SizedBox(height: 10),
+                      _buildSeriesList(context, 'popularSeries', 'tv'),
+                      SizedBox(height: 30),
+                      _buildSectionTitle('Séries de TV Mais Bem Avaliadas'),
+                      SizedBox(height: 10),
+                      _buildSeriesList(context, 'topRatedSeries', 'tv'),
+                      SizedBox(height: 30),
+                      _buildSectionTitle('Séries de TV no Ar Atualmente'),
+                      SizedBox(height: 10),
+                      _buildSeriesList(context, 'onAirSeries', 'tv'),
+                      SizedBox(height: 30),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -214,8 +216,10 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 290,
+          height: 300,
           child: ListView.builder(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
             itemBuilder: (context, index) {
@@ -257,8 +261,10 @@ class MainPage extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: 290,
+          height: 300,
           child: ListView.builder(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemCount: series.length,
             itemBuilder: (context, index) {

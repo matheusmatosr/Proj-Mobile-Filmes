@@ -1,6 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.CineUCL">
+
     <application
-        android:label="CineUCL+"
+        android:label="CineUCL"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
