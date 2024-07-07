@@ -100,6 +100,32 @@ class _DetailsPageState extends State<DetailsPage> {
                 ],
               ),
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.red),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite, color: Colors.red),
+            label: '',
+          ),
+          /*BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.red),
+            label: '',
+          ),*/
+        ],
+        currentIndex: 0,
+        selectedItemColor: Colors.amber[800],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushNamed(context, '/home');
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/saved');
+          }
+        },
+      ),
     );
   }
 
@@ -231,7 +257,8 @@ class _DetailsPageState extends State<DetailsPage> {
         minimumSize: Size(double.infinity, 48),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0), // Espaçamento interno
+        padding:
+            const EdgeInsets.symmetric(vertical: 16.0), // Espaçamento interno
         child: Text(
           'Assistir Trailer',
           style: TextStyle(
@@ -264,7 +291,8 @@ class _DetailsPageState extends State<DetailsPage> {
               children: cast!.map<Widget>((actor) {
                 String? profilePath = actor['profile_path'] as String?;
                 String name = actor['name'] ?? 'Nome não disponível';
-                String character = actor['character'] ?? 'Personagem não disponível';
+                String character =
+                    actor['character'] ?? 'Personagem não disponível';
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Column(
@@ -276,7 +304,9 @@ class _DetailsPageState extends State<DetailsPage> {
                             ? NetworkImage(
                                 'https://image.tmdb.org/t/p/w200$profilePath',
                               )
-                            : AssetImage('assets/images/default_profile_image.png') as ImageProvider,
+                            : AssetImage(
+                                    'assets/images/default_profile_image.png')
+                                as ImageProvider,
                       ),
                       SizedBox(height: 8),
                       Text(
@@ -313,8 +343,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildLanguageAndAuthors() {
-    String language =
-        movieDetails?['original_language'] ?? 'Não especificado';
+    String language = movieDetails?['original_language'] ?? 'Não especificado';
     String authors = _getAuthors();
 
     return Row(
@@ -344,7 +373,8 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildOriginalTitleBudgetRevenue() {
-    String originalTitle = movieDetails?['original_title'] ?? 'Não especificado';
+    String originalTitle =
+        movieDetails?['original_title'] ?? 'Não especificado';
     String budget = movieDetails?['budget'] != null
         ? '\$${movieDetails!['budget']}'
         : 'Não especificado';

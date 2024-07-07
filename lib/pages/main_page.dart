@@ -169,15 +169,17 @@ class MainPage extends StatelessWidget {
               icon: Icon(Icons.favorite, color: Colors.red),
               label: '',
             ),
-            BottomNavigationBarItem(
+            /*BottomNavigationBarItem(
               icon: Icon(Icons.person, color: Colors.red),
               label: '',
-            ),
+            ),*/
           ],
           currentIndex: 0,
           selectedItemColor: Colors.amber[800],
           onTap: (index) {
-            if (index == 1) {
+            if (index == 0) {
+              Navigator.pushNamed(context, '/home');
+            } else if (index == 1) {
               Navigator.pushNamed(context, '/saved');
             }
           },
