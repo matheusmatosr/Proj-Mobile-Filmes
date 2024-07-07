@@ -37,8 +37,7 @@ class SavePage extends StatelessWidget {
                 maxCrossAxisExtent: 250,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 20,
-                childAspectRatio:
-                    isMobile ? 0.6 : 0.7, // Ajusta a proporção do card
+                childAspectRatio: isMobile ? 0.6 : 0.7,
               ),
               itemCount: savedItems.length,
               itemBuilder: (context, index) {

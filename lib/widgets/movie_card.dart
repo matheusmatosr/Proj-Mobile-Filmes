@@ -50,7 +50,7 @@ class MovieCard extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 12, // Reduz um pouco o tamanho da fonte
+              fontSize: 12,
             ),
           ),
           SizedBox(height: 4),
