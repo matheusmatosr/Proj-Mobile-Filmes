@@ -25,7 +25,7 @@ class _DetailsPageState extends State<DetailsPage> {
     final savedItemsProvider =
         Provider.of<SavedItemsProvider>(context, listen: false);
     isSaved = savedItemsProvider.isSaved(widget.item);
-    _fetchMovieDetails();
+    Future.microtask(() => _fetchMovieDetails());
   }
 
   Future<void> _fetchMovieDetails() async {
@@ -421,8 +421,9 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   void _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       throw 'Não foi possível abrir o link $url';
     }
