@@ -11,4 +11,4 @@ O CineUCL+ é um aplicativo que permite aos usuários explorar uma vasta coleç�
 - [Documento de Visão](https://docs.google.com/document/d/1XExbdPSp8uXpwtxF3F9pGmvCrFfd38O3D2ZAF4je6nQ/edit#heading=h.8ioi87sqic2s)
 - [Protótipo do Figma](https://www.figma.com/design/RIyuuiA952N1rjERpuV4wj/CineUCL%2B?node-id=0-1&t=DYzPcVau4ij74aIp-0)
 - [Trello](https://trello.com/b/UkmSnPfC/app-mobile)
-- [APK](https://drive.google.com/file/d/1vdGFbY3fdWfu4upjtD0Kor3FBf2GU-4c/view?usp=drivesdk)
+- [Baixar APK](https://drive.google.com/file/d/1vdGFbY3fdWfu4upjtD0Kor3FBf2GU-4c/view?usp=drivesdk)
